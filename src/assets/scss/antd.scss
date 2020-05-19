@@ -1,0 +1,184 @@
+.ant-form-item-label {
+    line-height: 1 !important;
+}
+
+.ant-btn {
+    // border-radius: 0px !important;
+    line-height: 1 !important;
+    font-weight: 400 !important;
+    height: auto !important;
+    padding: 0.65rem 0.81rem !important;
+
+    &.ant-btn-sm {
+        height: 30px !important;
+        padding: 0 7px !important;
+        font-size: 14px !important;
+        border-radius: 4px !important;
+    }
+}
+
+.ant-btn-primary {
+    color: #fff !important;
+    background: $primary !important;
+    border-color: $primary !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $primary-hover !important;
+        border-color: $primary-hover !important;
+    }
+}
+
+.ant-btn-link {
+    color: $primary !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: $primary-hover !important;
+    }
+}
+
+.ant-btn-success {
+    color: #fff !important;
+    background: $success !important;
+    border-color: $success !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $success-hover !important;
+        border-color: $success-hover !important;
+    }
+}
+
+.ant-btn-warning {
+    color: #fff !important;
+    background: $warning !important;
+    border-color: $warning !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $warning-hover !important;
+        border-color: $warning-hover !important;
+    }
+}
+
+.ant-btn-danger {
+    color: #fff !important;
+    background: $danger !important;
+    border-color: $danger !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $danger-hover !important;
+        border-color: $danger-hover !important;
+    }
+}
+
+.ant-btn-info {
+    color: #fff !important;
+    background: $info !important;
+    border-color: $info !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $info-hover !important;
+        border-color: $info-hover !important;
+    }
+}
+
+.ant-btn-dark {
+    color: #fff !important;
+    background: $dark !important;
+    border-color: $dark !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $dark-hover !important;
+        border-color: $dark-hover !important;
+    }
+}
+
+.ant-btn-secondary {
+    color: #fff;
+    background: $secondary !important;
+    border-color: $secondary !important;
+    text-transform: capitalize !important;
+
+    &:hover,
+    &:focus {
+        color: #fff !important;
+        background: $secondary-hover !important;
+        border-color: $secondary-hover !important;
+    }
+}
+
+.ant-modal {
+
+    .ant-btn {
+        color: $primary;
+        border-color: $primary;
+
+        &:hover,
+        &:focus {
+            color: $primary-hover;
+            border-color: $primary-hover;
+        }
+
+    }
+
+    .ant-btn-primary {
+        color: #fff;
+        background: $primary;
+        border-color: $primary;
+        text-transform: capitalize;
+
+        &:hover,
+        &:focus {
+            color: #fff;
+            background: $primary-hover;
+            border-color: $primary-hover;
+        }
+    }
+}
+
+.ant-modal-mask,
+.ant-modal-wrap {
+    z-index: 2000 !important;
+}
+
+.ant-select-dropdown {
+    z-index: 2050 !important;
+}
+
+.jumbotron {
+    background: rgba($primary, 0.1);
+
+    .ant-form-item {
+        margin-bottom: 0px !important;
+    }
+}
+
+.ant-input-number {
+    width: 100% !important;
+}
+
+.ant-pagination {
+    margin-top: 15px !important;
+}
+
+.ant-cascader-menus {
+    z-index: 3000 !important;
+}
