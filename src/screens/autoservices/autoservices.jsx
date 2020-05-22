@@ -65,13 +65,13 @@ class Autoservices extends Component {
     delete = (row) => {
         const { uuid } = row;
         this.setState({ submitting: true, edited: 0 });
-        func.delte(`emergencies/${row.uuid}`).then((res) => {
+        func.delte(`autoservices/${row.uuid}`).then((res) => {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
-                notification.success({ message: res.data });
+                notification.success({ message: res.message });
             } else {
-                notification.error({ message: res.data });
+                notification.error({ message: res.message });
             }
         });
     }

@@ -124,7 +124,7 @@ class Expertadvices extends Component {
                         {loading === false && (
                             <div className="row">
                                 {data.map(row => (
-                                    <div className="col-4">
+                                    <div className="col-3">
                                         <Card className={edited === row.uuid ? 'animated shake' : ''}>
                                             <CardBody style={{ padding: 0 }}>
                                                 <img className="thumbnail" src={row.image ? row.image_link : defaultImage} alt={row.title} />

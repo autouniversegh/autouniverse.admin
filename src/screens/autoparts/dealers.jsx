@@ -6,7 +6,7 @@ import moment from 'moment';
 import DealersForm from './components/dealers.form';
 
 const limit = 12;
-const defaultImage = '/assets/img/noimage.jpg';
+const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Deleted']];
 
 class Dealers extends Component {
@@ -63,9 +63,9 @@ class Dealers extends Component {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
-                notification.success({ message: res.data });
+                notification.success({ message: res.message });
             } else {
-                notification.error({ message: res.data });
+                notification.error({ message: res.message });
             }
         });
     }
@@ -110,7 +110,7 @@ class Dealers extends Component {
                             <table className="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
+                                        <th colSpan={2}>#</th>
                                         <th>Name</th>
                                         <th>Contact person</th>
                                         <th>Details</th>
@@ -127,6 +127,7 @@ class Dealers extends Component {
                                         data.map((row) => (
                                             <tr key={row.uuid} className={edited === row.uuid ? 'animated shake bg-gray-100' : ''}>
                                                 <td>{i++}</td>
+                                                <td><img className="img-thumbnail" width="80px" src={row.logo ? row.logo_link : defaultImage} alt={row.name} /></td>
                                                 <td>{row.name}</td>
                                                 <td>
                                                     Name: {row.contact_namet} <br />

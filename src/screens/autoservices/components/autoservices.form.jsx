@@ -183,7 +183,7 @@ const AutoservicesFormScreen = props => {
                                 <Form.Item label="Contact number/s">
                                     {getFieldDecorator('contact_phones', {
                                         rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.id && row.contact_phones.split(',')
+                                        initialValue: row.id && row.contact_phones.toString().split(',')
                                     })(
                                         <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
                                     )}

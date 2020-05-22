@@ -1,4 +1,3 @@
-// import React from 'react';
 import moment from 'moment';
 import axios from 'axios';
 
@@ -6,12 +5,15 @@ export const api = {
     space: 'on',
     apiKey: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt6TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu5',
     server_of: 'http://localhost/autouniverse/api/v1/api/',
+    server_qa: 'http://qa-api.autouniversegh.com/v1/api/',
     server_on: 'http://api.autouniversegh.com/v1/api/'
 }
 
 export const initialize = () => {
-    if (window.location.host.match(/localhost:/i)) {
+    if (window.location.host.match(/localhost/i)) {
         api.space = 'of';
+    } else if (window.location.host.match(/qa-/i)) {
+        api.space = 'qa';
     } else {
         api.space = 'on';
     }

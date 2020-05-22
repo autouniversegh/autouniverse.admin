@@ -5,8 +5,11 @@ import { Modal, Form, Button, Input, Select, notification, Cascader } from 'antd
 import * as func from '../../../providers/functions';
 
 const DealersFormScreen = props => {
+    const defaultImage = '/assets/noimage.jpg';
     const { row, form: { getFieldDecorator, validateFields, resetFields }, visible, _utils: { locations } } = props;
 
+    const [file, setFile] = useState(null);
+    const [image, setImage] = useState('');
     const [method, setMethod] = useState('');
     const [locOptions, setLocOptions] = useState([]);
     const [errMessage, setErrMessage] = useState('');
@@ -18,9 +21,11 @@ const DealersFormScreen = props => {
         if (row.id) {
             setModalTitle('Edit dealer');
             setMethod('put');
+            setImage(row.logo ? row.logo_link : defaultImage);
         } else {
             setModalTitle('Add dealer');
             setMethod('post');
+            setImage(defaultImage);
         }
 
         // set location options
@@ -45,13 +50,63 @@ const DealersFormScreen = props => {
         setLocation({ region: e[0], city: e[1], market: e[2] });
     }
 
+    const addImage = (e) => {
+        var target = e.target.files[0];
+        var imageInput = document.getElementById('image');
+        var image = imageInput.files[0];
+        var reader = new FileReader();
+        reader.onload = function (r) {
+            setFile(target);
+            setImage(reader.result);
+        }
+        reader.readAsDataURL(image);
+    }
+    const removeImage = () => {
+        if (method === 'post') {
+            setFile(null);
+            setImage(defaultImage);
+        } else {
+            setFile(null);
+            setImage(row.image_link);
+        }
+    }
+
     const submit = e => {
         e.preventDefault();
         validateFields((err, v) => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
+                var imoge = row.logo || '';
+                if (file) {
+                    func.postFile('upload', { folder: 'dealers', 'file': file, name: v.name, resize: '800,800' }).then(res => {
+                        if (res.status === 200) {
+                            imoge = res.data[0];
+                            submitGo(v, imoge);
+                        } else {
+                            setSubmitting(false);
+                            if (res.status === 412) {
+                                setErrMessage(res.data.join('<br />'));
+                            } else {
+                                setErrMessage(res.message);
+                            }
+                        }
+                    });
+                } else {
+                    submitGo(v, imoge);
+                }
+            }
+        });
+    }
+
+    const submitGo = (v, imoge) => {
+        validateFields((err, v) => {
+            if (!err) {
+                setErrMessage('');
+                setSubmitting(true);
+                v['logo'] = imoge;
                 v['location'] = JSON.stringify(location);
+                v['contact_phones'] = v.contact_phones.join(',');
                 func[method](`dealers${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
                     setSubmitting(false);
                     if (res.status === 200) {
@@ -72,7 +127,7 @@ const DealersFormScreen = props => {
     }
 
     return (
-        <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={900} maskClosable={false}
+        <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={1200} maskClosable={false}
             footer={[
                 <Button key="back" disabled={submitting} onClick={() => props.onCancel()}>
                     Close
@@ -86,7 +141,19 @@ const DealersFormScreen = props => {
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="row">
-                    <div className="col-12 col-lg-12">
+                    <div className="col-12 col-lg-3">
+                        <img className="img-thumbnail" src={image} alt={row.name} width="100%" />
+                        <input type="file" name="image" id="image" accept="image/*" onChange={addImage} className="hide" />
+                        <div className="row row-xs">
+                            <div className="col-12">
+                                <Button type="dark" size="small" block className="mg-b-5" onClick={() => window.$('#image').click()}>Choose logo</Button>
+                            </div>
+                            <div className="col-12">
+                                {file && (<Button type="danger" size="small" block onClick={removeImage}>Remove logo</Button>)}
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-12 col-lg-9">
                         <div className="row row-xs">
                             <div className="col-12 col-lg-12">
                                 <Form.Item label="Shop name">
@@ -112,9 +179,9 @@ const DealersFormScreen = props => {
                                 <Form.Item label="Contact number/s">
                                     {getFieldDecorator('contact_phones', {
                                         rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.contact_phones
+                                        initialValue: row.id && row.contact_phones.split(',')
                                     })(
-                                        <Input autoComplete="off" size="large" disabled={submitting} />
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
                                     )}
                                 </Form.Item>
                             </div>
@@ -175,29 +242,6 @@ const DealersFormScreen = props => {
                             </div>
                         </div>
                     </div>
-                    {/* <div className="col-12 col-lg-5">
-                        <div style={{ background: '#efefef', padding: 20 }}>
-                            {parts.map((p, i) => (
-                                <div className="row row-xs">
-                                    <div className="col-12 col-lg-12">Car parts (Car / Model / Year / Part)</div>
-                                    <div className="col-12 col-lg-9">
-                                        <Cascader
-                                            defaultValue={(Object.values(p || {}))}
-                                            options={carOptions}
-                                            onChange={(e) => setFormCarparts(e, i)}
-                                        />
-                                    </div>
-                                    <div className="col-12 col-lg-3 text-right">
-                                        <Button size="small" onClick={() => setParts(parts.concat({}))}><i className="icon-plus"></i></Button> {' '}
-                                        {(p.car || i > 0) && (
-                                            <Button size="small" type="danger" onClick={() => setParts(parts.filter((p, x) => i !== x))}><i className="icon-close"></i></Button>
-                                        )}
-                                    </div>
-                                    <div className="col-12">&nbsp;</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div> */}
                 </div>
             </Form>
         </Modal>

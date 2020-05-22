@@ -7,7 +7,7 @@ import UsersForm from './components/users.form';
 import UsersFormTutor from './components/users.form.tutor';
 
 const limit = 25;
-const defaultImage = '/assets/img/noimage.jpg';
+const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Banned']];
 
 class UsersList extends Component {

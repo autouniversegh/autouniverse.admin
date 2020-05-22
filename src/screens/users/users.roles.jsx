@@ -6,7 +6,7 @@ import moment from 'moment';
 import UsersRolesForm from './components/users.roles.form';
 
 const limit = 25;
-const defaultImage = '/assets/img/noimage.jpg';
+const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Banned']];
 
 class UsersRoles extends Component {

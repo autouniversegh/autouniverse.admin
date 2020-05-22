@@ -3,7 +3,7 @@ import { Modal, Button, Form, Input, Select, Pagination, notification, Popconfir
 import * as func from '../../providers/functions';
 
 const limit = 12;
-const defaultImage = '/assets/img/noimage.jpg';
+const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [<label className="badge badge-warning">Inactive</label>, <label className="badge badge-success">Active</label>];
 
 class SetupSchoolsScreen extends Component {

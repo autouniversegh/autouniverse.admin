@@ -126,7 +126,7 @@ class Mechanics extends Component {
                                                 <td><img className="img-thumbnail" width="80px" src={row.logo ? row.logo_link : defaultImage} alt={row.name} /></td>
                                                 <td>{row.name}</td>
                                                 <td>
-                                                    Name: {row.contact_namet} <br />
+                                                    Name: {row.contact_name} <br />
                                                     Phone: {row.contact_phones}
                                                 </td>
                                                 <td>

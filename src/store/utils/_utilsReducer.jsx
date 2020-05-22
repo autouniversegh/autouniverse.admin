@@ -71,6 +71,7 @@ const initialState = {
                 icon: 'icon-user',
                 children: [
                     { name: 'Normal users', url: '/users/normal' },
+                    { name: 'User access', url: '/users/access' },
                     { name: 'Admin users', url: '/users/admin' }
                 ]
             },
