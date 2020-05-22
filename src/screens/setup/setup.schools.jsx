@@ -156,10 +156,10 @@ class SetupSchoolsScreen extends Component {
                                         </Select>
                                     </div>
                                     <div className="col-4">
-                                        <Input placeholder="Filter by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
+                                        <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
                                     <div className="col-2">
-                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Filter</Button>
+                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-4 text-right">
                                         <Button type="dark" size="small" onClick={() => this.form()}>Add new</Button>

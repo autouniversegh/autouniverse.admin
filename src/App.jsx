@@ -28,10 +28,10 @@ class App extends React.Component {
       func.get(`users/${this.props._auth.logg.uuid}`).then(res => {
         // this.setState({ initializing: false });
         if (res.status === 200) {
-          this.props.signInSuccess(this.props._auth.token, res.data[0]);
-          func.setStorageJson('users', res.data[0]);
+          this.props.signInSuccess(this.props._auth.token, res.data);
+          func.setStorageJson('users', res.data);
         } else {
-          // this.props.signOutSuccess();
+          this.props.signOutSuccess();
         }
       });
     }

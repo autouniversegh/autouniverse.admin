@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { Route, Switch } from "react-router-dom";
 import NotFound from '../../partials/NotFound';
 
-import UsersList from './users.list';
-import UsersRoles from './users.roles';
+const List = React.lazy(() => import('./users'));
+const Access = React.lazy(() => import('./access'));
 
 export default class Users extends Component {
 
@@ -12,10 +12,9 @@ export default class Users extends Component {
         return (
             <React.Fragment>
                 <Switch>
-                    <Route path="/users/users" render={(props) => <UsersList {...props} {...this.props} params={{ admin: 0, type: 0 }} />} />
-                    <Route path="/users/admin" render={(props) => <UsersList {...props} {...this.props} params={{ admin: 1, type: 0 }}  />}/>
-                    <Route path="/users/tutors" render={(props) => <UsersList {...props} {...this.props} params={{ type: 1 }} />} />
-                    <Route path="/users/roles" render={(props) => <UsersRoles {...props} {...this.props} />} />
+                    <Route exact path="/users/normal" render={(props) => <List {...props} {...this.props} params={{ admin: 0 }} />} />
+                    <Route exact path="/users/admin" render={(props) => <List {...props} {...this.props} params={{ admin: 1 }} />} />
+                    <Route exact path="/users/access" render={(props) => <Access {...props} {...this.props} />} />
 
                     <Route render={NotFound} />
                 </Switch>

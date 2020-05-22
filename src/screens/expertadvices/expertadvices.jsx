@@ -71,9 +71,9 @@ class Expertadvices extends Component {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
-                notification.success({ message: res.data });
+                notification.success({ message: res.message });
             } else {
-                notification.error({ message: res.data });
+                notification.error({ message: res.message });
             }
         });
     }
@@ -97,7 +97,7 @@ class Expertadvices extends Component {
                                         </Select>
                                     </div>
                                     <div className="col-3">
-                                        <Input placeholder="Filter by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
+                                        <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
                                     <div className="col-2">
                                         <Select autoComplete="off" showSearch disabled={loading} value={this.state.icategory} onChange={e => this.formChange(e, 'icategory')}>
@@ -108,10 +108,10 @@ class Expertadvices extends Component {
                                         </Select>
                                     </div>
                                     <div className="col-2">
-                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Filter</Button>
+                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-3 text-right">
-                                        {func.hasR('mec_add') && (
+                                        {func.hasR('adv_add') && (
                                             <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
                                         )}
                                     </div>
@@ -139,9 +139,11 @@ class Expertadvices extends Component {
                                             </CardBody>
                                             <CardFooter>
                                                 <Button type="dark" size="small" className="mg-r-10" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
-                                                <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
-                                                    <Button type="danger" size="small" loading={submitting}>Delete</Button>
-                                                </Popconfirm>
+                                                {func.hasR('adv_del') && (
+                                                    <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
+                                                        <Button type="danger" size="small" loading={submitting}>Delete</Button>
+                                                    </Popconfirm>
+                                                )}
                                             </CardFooter>
                                         </Card>
                                     </div>

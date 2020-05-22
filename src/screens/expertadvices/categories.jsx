@@ -62,9 +62,9 @@ class Categories extends Component {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
-                notification.success({ message: res.data });
+                notification.success({ message: res.message });
             } else {
-                notification.error({ message: res.data });
+                notification.error({ message: res.message });
             }
         });
     }
@@ -88,13 +88,13 @@ class Categories extends Component {
                                         </Select>
                                     </div>
                                     <div className="col-3">
-                                        <Input placeholder="Filter by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
+                                        <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
                                     <div className="col-2">
-                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Filter</Button>
+                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-5 text-right">
-                                        {func.hasR('ctg_add') && (
+                                        {func.hasR('adv_ctg_add') && (
                                             <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
                                         )}
                                     </div>
@@ -126,11 +126,11 @@ class Categories extends Component {
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    {row.status !== 2 && func.hasR('ctg_upd') && (
+                                                    {row.status !== 2 && func.hasR('adv_ctg_upd') && (
                                                         <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
                                                     )}
                                                     {' '}
-                                                    {func.hasR('ctg_del') && (
+                                                    {func.hasR('adv_ctg_del') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
                                                             <Button type="danger" size="small" loading={submitting}>Delete</Button>
                                                         </Popconfirm>

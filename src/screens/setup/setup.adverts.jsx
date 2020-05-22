@@ -160,10 +160,10 @@ class SetupAdvertsScreen extends Component {
                                         </Select>
                                     </div>
                                     <div className="col-4">
-                                        <Input size="large" placeholder="Filter by title" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'ititle')} />
+                                        <Input size="large" placeholder="Search by title" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'ititle')} />
                                     </div>
                                     <div className="col-2">
-                                        <Button type="primary" loading={loading} onClick={this.filter}>Filter</Button>
+                                        <Button type="primary" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-4 text-right">
                                         <Button type="dark" onClick={() => this.form()}>Add new</Button>

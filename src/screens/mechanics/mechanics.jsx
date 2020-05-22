@@ -63,9 +63,9 @@ class Mechanics extends Component {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
-                notification.success({ message: res.data });
+                notification.success({ message: res.message });
             } else {
-                notification.error({ message: res.data });
+                notification.error({ message: res.message });
             }
         });
     }
@@ -89,10 +89,10 @@ class Mechanics extends Component {
                                         </Select>
                                     </div>
                                     <div className="col-3">
-                                        <Input placeholder="Filter by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
+                                        <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
                                     <div className="col-2">
-                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Filter</Button>
+                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-5 text-right">
                                         {func.hasR('mec_add') && (

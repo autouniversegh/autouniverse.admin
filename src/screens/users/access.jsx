@@ -1,25 +1,28 @@
 import React, { Component } from 'react';
-import { Button, Form, Select, Pagination, notification, Popconfirm } from 'antd';
+import { Button, Form, Input, Select, Pagination, Popconfirm, notification } from 'antd';
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
-import UsersRolesForm from './components/users.roles.form';
+import AccesForm from './components/access.form';
 
-const limit = 25;
-const defaultImage = '/assets/noimage.jpg';
-const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Banned']];
+const limit = 12;
+const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Deleted']];
 
-class UsersRoles extends Component {
+class Categories extends Component {
 
     state = {
-        loading: false, usersModal: false, modalShow: false,
+        loading: false, formModal: false,
         data: [], row: {}, pathname: '', edited: 0,
         istatus: '%', iname: '',
         step: 0, currentStep: 1, total: 0
     }
 
     componentDidMount() {
-        this.props.setPageTitle('Manage user roles');
+        this.setPage();
+    }
+
+    setPage() {
+        this.props.setPageTitle('User access');
         this.getData();
     }
 
@@ -31,10 +34,10 @@ class UsersRoles extends Component {
     getData = () => {
         this.setState({ loading: true, total: 0 });
         const { istatus, iname, step } = this.state;
-        func.post('users/roles', { name: `%${iname}%`, limit: `${step},${limit}`, status: istatus }).then(res => {
+        func.get('users-access', { name: `%${iname}%`, limit: `${step},${limit}`, status: istatus }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
-                this.setState({ data: res.result, total: res.count });
+                this.setState({ data: res.data, total: res.count });
             } else {
                 this.setState({ data: [] });
             }
@@ -52,16 +55,16 @@ class UsersRoles extends Component {
         });
     }
 
-    action = (row, status) => {
-        const { id } = row;
+    delete = (row) => {
+        const { uuid } = row;
         this.setState({ submitting: true, edited: 0 });
-        func.post(`users/roles_delete`, { id, status }).then((res) => {
+        func.delte(`users-access/${row.uuid}`).then((res) => {
             this.setState({ submitting: false });
             if (res.status === 200) {
-                this.setState({ data: this.state.data.filter(row => row.id !== id) });
-                notification.success({ message: res.result });
+                this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
+                notification.success({ message: res.message });
             } else {
-                notification.error({ message: res.result });
+                notification.error({ message: res.message });
             }
         });
     }
@@ -78,17 +81,22 @@ class UsersRoles extends Component {
                             <Form hideRequiredMark={false}>
                                 <div className="row row-xs">
                                     <div className="col-2">
-                                        <Select showSearch={true} size="large" placeholder="Status" value={istatus} disabled={loading} onChange={e => this.formChange(e, 'istatus')}>
+                                        <Select showSearch={true} placeholder="Status" value={istatus} disabled={loading} onChange={e => this.formChange(e, 'istatus')}>
                                             <Select.Option value={'%'}>All status</Select.Option>
                                             <Select.Option value={1}>Active</Select.Option>
-                                            <Select.Option value={0}>Not active</Select.Option>
+                                            <Select.Option value={0}>Inactive</Select.Option>
                                         </Select>
                                     </div>
-                                    <div className="col-2">
-                                        <Button type="primary" loading={loading} onClick={this.filter}>Filter</Button>
+                                    <div className="col-3">
+                                        <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
-                                    <div className="col-8 text-right">
-                                        <Button type="dark" onClick={() => this.setState({ row: {}, modalShow: true })}>Add new</Button>
+                                    <div className="col-2">
+                                        <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
+                                    </div>
+                                    <div className="col-5 text-right">
+                                        {func.hasR('usr_acc_add') && (
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                        )}
                                     </div>
                                 </div>
                             </Form>
@@ -105,22 +113,26 @@ class UsersRoles extends Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {loading === true && (<tr><td align="center" colSpan="15">{func.fspinner_xs} loading...</td></tr>)}
+                                    {loading === true && (<tr><td align="center" colSpan="15"><i className="fa fa-spin fa-spinner"></i> loading...</td></tr>)}
                                     {loading === false && data.length === 0 && (<tr><td align="center" colSpan="15">No records found</td></tr>)}
 
                                     {loading === false && (
                                         data.map((row) => (
-                                            <tr key={row.id} className={edited === row.id ? 'animated shake bg-gray-100' : ''}>
+                                            <tr key={row.uuid} className={edited === row.uuid ? 'animated shake bg-gray-100' : ''}>
                                                 <td>{i++}</td>
                                                 <td>{row.name}</td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
-                                                <td>{moment(row.crdate).format('D.MMM.YY')}</td>
+                                                <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    <Button type="dark" size="small" className="mg-r-5" loading={submitting} onClick={() => this.setState({ row, modalShow: true })}>Edit</Button>
-
-                                                    <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.action(row, 1)}>
-                                                        <Button type="danger" size="small" className="mg-r-5" loading={submitting}>Delete</Button>
-                                                    </Popconfirm>
+                                                    {row.status !== 2 && func.hasR('usr_acc_upd') && (
+                                                        <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
+                                                    )}
+                                                    {' '}
+                                                    {func.hasR('usr_acc_del') && (
+                                                        <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
+                                                            <Button type="danger" size="small" loading={submitting}>Delete</Button>
+                                                        </Popconfirm>
+                                                    )}
                                                 </td>
                                             </tr>
                                         ))
@@ -133,23 +145,22 @@ class UsersRoles extends Component {
                 </div>
 
 
-                {this.state.modalShow && (
-                    <UsersRolesForm
+                {this.state.formModal === true && (
+                    <AccesForm
                         {...this.props}
                         row={this.state.row}
-                        modalShow={this.state.modalShow}
-                        defaultImage={defaultImage}
-                        onCancel={() => this.setState({ row: {}, modalShow: false })}
+                        visible={this.state.formModal}
+                        onCancel={() => this.setState({ row: {}, formModal: false })}
                         onOK={(a, e) => {
                             this.setState({ edited: 0 });
                             setTimeout(() => {
-                                if (a === 'update') {
-                                    let i = data.indexOf(data.filter(row => row.id === e.id)[0]);
+                                if (a === 'put') {
+                                    let i = data.indexOf(data.filter(row => row.uuid === e.uuid)[0]);
                                     data[i] = e;
-                                    this.setState({ data, edited: e.id });
+                                    this.setState({ data, edited: e.uuid });
                                 } else {
                                     data.unshift(e);
-                                    this.setState({ data, edited: e.id });
+                                    this.setState({ data, edited: e.uuid });
                                 }
                             }, 200);
                         }}
@@ -162,4 +173,4 @@ class UsersRoles extends Component {
     }
 }
 
-export default UsersRoles;
+export default Categories;

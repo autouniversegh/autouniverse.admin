@@ -3,28 +3,32 @@ import { Button, Form, Input, Select, Pagination, Popconfirm, notification } fro
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
-import DealersForm from './components/dealers.form';
+import UsersForm from './components/users.form';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Deleted']];
 
-class Dealers extends Component {
+class UsersList extends Component {
 
     state = {
         loading: false, formModal: false,
-        data: [], row: {}, pathname: '', edited: 0,
-        istatus: '%', iname: '',
+        data: [], access: [], row: {}, pathname: 'XXL', edited: 0, manipulate: 0,
+        istatus: '%', iname: '', iaccess: '%',
         step: 0, currentStep: 1, total: 0
     }
 
     componentDidMount() {
-        this.setPage();
+        this.getData();
     }
 
-    setPage() {
-        this.props.setPageTitle('Auto Parts Dealers');
-        this.getData();
+    componentDidUpdate() {
+        if (this.state.pathname !== window.location.pathname) {
+            this.setState({ pathname: window.location.pathname }, () => {
+                this.props.setPageTitle('Users');
+                this.getData();
+            });
+        }
     }
 
     filter = () => {
@@ -34,8 +38,13 @@ class Dealers extends Component {
     }
     getData = () => {
         this.setState({ loading: true, total: 0 });
-        const { istatus, iname, step } = this.state;
-        func.get('dealers', { name: `%${iname}%`, limit: `${step},${limit}`, status: istatus }).then(res => {
+        const { params } = this.props;
+        const { istatus, iname, iaccess, step } = this.state;
+        params['name'] = `%${iname}%`;
+        params['access'] = iaccess;
+        params['status'] = istatus;
+        params['limit'] = `${step},${limit}`;
+        func.get('users', params).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
@@ -43,6 +52,12 @@ class Dealers extends Component {
                 this.setState({ data: [] });
             }
         });
+
+        // func.get('users-access', { status: 1, orderby: 'name_asc' }).then(res => {
+        //     if (res.status === 200) {
+        //         this.setState({ access: res.data });
+        //     }
+        // });
     }
 
     formChange = (e, name) => {
@@ -59,7 +74,7 @@ class Dealers extends Component {
     delete = (row) => {
         const { uuid } = row;
         this.setState({ submitting: true, edited: 0 });
-        func.delte(`dealers/${row.uuid}`).then((res) => {
+        func.delte(`users/${row.uuid}`).then((res) => {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
@@ -72,7 +87,7 @@ class Dealers extends Component {
 
     render() {
         let i = this.state.step + 1;
-        const { loading, data, submitting, total, currentStep, edited, istatus } = this.state;
+        const { loading, data, submitting, total, currentStep, edited, istatus, access } = this.state;
 
         return (
             <React.Fragment>
@@ -91,15 +106,21 @@ class Dealers extends Component {
                                     <div className="col-3">
                                         <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
+                                    {this.props.params.admin === 1 && (
+                                        <div className="col-2">
+                                            <Select autoComplete="off" showSearch disabled={loading} value={this.state.iaccess} onChange={e => this.formChange(e, 'iaccess')}>
+                                                <Select.Option value={'%'}>All access</Select.Option>
+                                                {access.map(ctg => (
+                                                    <Select.Option value={ctg.uuid} key={ctg.uuid}>{ctg.name}</Select.Option>
+                                                ))}
+                                            </Select>
+                                        </div>
+                                    )}
                                     <div className="col-2">
                                         <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
-                                    <div className="col-5 text-right">
-                                        {func.hasR('del_up') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-cloud-upload"></i> &nbsp; Upload dealers</Button>
-                                        )}
-                                        {' '}
-                                        {func.hasR('del_add') && (
+                                    <div className="col-3 text-right">
+                                        {func.hasR('usr_add') && (
                                             <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
                                         )}
                                     </div>
@@ -112,8 +133,10 @@ class Dealers extends Component {
                                     <tr>
                                         <th colSpan={2}>#</th>
                                         <th>Name</th>
-                                        <th>Contact person</th>
                                         <th>Details</th>
+                                        {this.props.params.admin === 1 && (
+                                            <th>Access</th>
+                                        )}
                                         <th>Status</th>
                                         <th>Created</th>
                                         <th>#</th>
@@ -127,25 +150,23 @@ class Dealers extends Component {
                                         data.map((row) => (
                                             <tr key={row.uuid} className={edited === row.uuid ? 'animated shake bg-gray-100' : ''}>
                                                 <td>{i++}</td>
-                                                <td><img className="img-thumbnail" width="80px" src={row.logo ? row.logo_link : defaultImage} alt={row.name} /></td>
+                                                <td><img className="img-thumbnail img-circle" width="50px" src={row.avatar ? row.avatar_link : defaultImage} alt={row.name} /></td>
                                                 <td>{row.name}</td>
                                                 <td>
-                                                    Name: {row.contact_namet} <br />
-                                                    Phone: {row.contact_phones}
+                                                    Email: {row.email} <br />
+                                                    Phone: {row.phone} <br />
                                                 </td>
-                                                <td>
-                                                    Location: {row.location.region} / {row.location.city} / {row.location.market} <br />
-                                                    Delivery: {row.delivery ? 'YES' : 'NO'} <br />
-                                                    Parts imported from: {row.parts_source}
-                                                </td>
+                                                {this.props.params.admin === 1 && (
+                                                    <td>{row.access.name}</td>
+                                                )}
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    {row.status !== 2 && func.hasR('del_upd') && (
+                                                    {row.status !== 2 && func.hasR('usr_upd') && (
                                                         <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
                                                     )}
                                                     {' '}
-                                                    {func.hasR('del_del') && (
+                                                    {func.hasR('usr_del') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
                                                             <Button type="danger" size="small" loading={submitting}>Delete</Button>
                                                         </Popconfirm>
@@ -163,11 +184,11 @@ class Dealers extends Component {
 
 
                 {this.state.formModal === true && (
-                    <DealersForm
+                    <UsersForm
                         {...this.props}
                         row={this.state.row}
                         visible={this.state.formModal}
-                        defaultImage={defaultImage}
+                        access={this.state.access}
                         onCancel={() => this.setState({ row: {}, formModal: false })}
                         onOK={(a, e) => {
                             this.setState({ edited: 0 });
@@ -191,4 +212,4 @@ class Dealers extends Component {
     }
 }
 
-export default Dealers;
+export default UsersList;

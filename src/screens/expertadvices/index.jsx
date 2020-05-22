@@ -5,7 +5,7 @@ import NotFound from '../../partials/NotFound';
 const List = React.lazy(() => import('./expertadvices'));
 const Categories = React.lazy(() => import('./categories'));
 
-export default class Emergencies extends Component {
+export default class Experadvices extends Component {
 
     render() {
 
