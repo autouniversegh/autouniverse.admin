@@ -230,3 +230,13 @@ export const hasR = (role) => {
     myRoles = ['*'];
     return (myRoles.includes(role) || myRoles.includes('*'));
 };
+
+export const chunk = (a, l) => {
+    var results = [];
+
+    while (a.length) {
+        results.push(a.splice(0, l));
+    }
+
+    return results;
+}
