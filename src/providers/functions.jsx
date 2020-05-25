@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import moment from 'moment';
 import axios from 'axios';
 
@@ -224,6 +225,22 @@ export const generateOptions = (length, step = 1) => {
     return arr;
 };
 
+export const locationOptions = (locations) => {
+    let lptions = [];
+    Object.keys(locations).map(region => {
+        let cities = [];
+        Object.keys(locations[region]).map(city => {
+            let areas = [];
+            locations[region][city].areas.map(area => {
+                areas.push({ value: area, label: area });
+            });
+            cities.push({ value: city, label: city, children: areas });
+        });
+        lptions.push({ value: region, label: region, children: cities });
+    });
+    return lptions;
+}
+
 export const hasR = (role) => {
     let user = getStorageJson('user');
     let myRoles = ((user.role || {}).data || '').split(',');
@@ -233,10 +250,8 @@ export const hasR = (role) => {
 
 export const chunk = (a, l) => {
     var results = [];
-
     while (a.length) {
         results.push(a.splice(0, l));
     }
-
     return results;
 }

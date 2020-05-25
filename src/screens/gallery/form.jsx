@@ -1,14 +1,15 @@
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Button, notification, Upload } from 'antd';
+import { Modal, Form, Button, notification } from 'antd';
 
 import * as func from '../../providers/functions';
+import { GalleryContent, GalleryImageCard } from '../../components';
 
 const GalleryFormScreen = props => {
-    const { form: { resetFields }, visible } = props;
+    const { visible } = props;
 
     const [method, setMethod] = useState('');
-    const [images, setImages] = useState([]);
+    const [images, setImages] = useState({ names: [], links: [] });
     const [errMessage, setErrMessage] = useState('');
     const [modalTitle, setModalTitle] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -20,17 +21,32 @@ const GalleryFormScreen = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    const uploadSuccess = (data) => {
+        images.names.push(data.name);
+        images.links.push(data.link);
+
+        setImages(images);
+        setSubmitting(true); setSubmitting(false);
+    }
+    const remove = (image) => {
+        let i = images.names.indexOf(image);
+        images.names.splice(i, 1);
+        images.links.splice(i, 1);
+
+        setImages(images);
+        setSubmitting(true); setSubmitting(false);
+    }
+
     const submit = e => {
         e.preventDefault();
         setErrMessage('');
         setSubmitting(true);
-        func[method](`gallery`, { images: Object.values(images) }).then((res) => {
+        func[method](`gallery`, { images: images.names }).then((res) => {
             setSubmitting(false);
             if (res.status === 200) {
                 props.onOK();
                 props.onCancel();
-                setImages([]);
-                resetFields();
+                setImages({ names: [], links: [] });
                 notification.success({ message: res.message });
             } else {
                 if (res.status === 412) {
@@ -40,28 +56,6 @@ const GalleryFormScreen = props => {
                 }
             }
         });
-    }
-
-    const upProps = {
-        multiple: true,
-        accept: 'image/*',
-        name: 'file[0]',
-        action: `${func.api.apiURL}upload`,
-        data: { folder: 'gallery' },
-        headers: {
-            'x-access-token': func.api.apiKey + '.' + func.api.apiToken
-        },
-        onChange(e) {
-            if (e.file.status === 'done') {
-                if (e.file.response.status === 200) {
-                    images[e.file.response.data[0]] = e.file.response.data[0];
-                    setImages(images);
-                }
-            }
-        },
-        onRemove(e) {
-            func.delte(`upload/gallery/${e.response.data[0]}`);
-        }
     }
 
     return (
@@ -76,17 +70,16 @@ const GalleryFormScreen = props => {
             ]}
             style={{ top: 20 }} className={`${errMessage ? 'animated shake' : ''}`}
         >
-            <Form hideRequiredMark={false}>
-                {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
-                <Upload.Dragger {...upProps} style={{ width: '100%' }}>
-                    <div>&nbsp;</div>
-                    <p className="ant-upload-drag-icon">
-                        <i className="fa fa-upload fa-2x text-primary"></i>
-                    </p>
-                    <p className="ant-upload-text">Click or drag file to this area to upload</p>
-                    <div>&nbsp;</div>
-                </Upload.Dragger>
-            </Form>
+            {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
+            <GalleryContent folder="gallery" multiple={true} showUploadList={false} uploadSuccess={uploadSuccess} />
+            <div className="clearfix" />
+            <div className="row">
+                {images.links.map((link, i) => (
+                    <div className="col-12 col-lg-12">
+                        <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => remove(e)} folder="gallery" />
+                    </div>
+                ))}
+            </div>
         </Modal>
     );
 

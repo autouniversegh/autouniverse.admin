@@ -5,6 +5,9 @@
 @import './animate.min.css';
 
 
+body {
+	font-size: 13px !important;
+}
 
 input[readonly] {
 	background: #eee;
@@ -236,4 +239,9 @@ strong {
 .thumbnail {
 	max-width: 100%;
 	height: auto;
+}
+
+.flex-middle {
+	display: flex;
+	align-items: center;
 }
