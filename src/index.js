@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import configureStore, { history } from "./store/_store";
 
 import './assets/scss/custom.scss';
+import 'react-image-lightbox/style.css';
 
 import App from "./App.jsx";
 

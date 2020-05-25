@@ -39,7 +39,7 @@ const initialState = {
                 ]
             },
             {
-                name: 'Auto Services', url: '/autoservices', icon: 'icon-cursor', code: 'aut',
+                name: 'Other Auto Services', url: '/autoservices', icon: 'icon-cursor', code: 'aut',
                 children: [
                     { name: 'Other Auto Services', url: '/autoservices', code: 'aut' },
                     { name: 'Manage Categories', url: '/autoservices/categories', code: 'aut_ctg' },
@@ -77,6 +77,9 @@ const initialState = {
                 children: [
                     { name: 'Subscriptions', url: '/setup/subscriptions' }
                 ]
+            },
+            {
+                name: 'Gallery', url: '/gallery', icon: 'fa fa-image', code: 'gal'
             },
         ]
     }
