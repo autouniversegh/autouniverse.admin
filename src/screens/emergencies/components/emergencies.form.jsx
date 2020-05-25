@@ -161,7 +161,7 @@ const EmergenciesFormScreen = props => {
                             <div className="col-12 col-lg-6">
                                 <Form.Item label="Certfications" help="Separate each value with a comma (,)">
                                     {getFieldDecorator('certifications', {
-                                        rules: [{ required: true, message: <span /> }],
+                                        // rules: [{ required: true, message: <span /> }],
                                         initialValue: row.id && row.certifications.split(',')
                                     })(
                                         <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />

@@ -16,6 +16,25 @@ class ReportsDealers extends Component {
 
     componentDidMount() {
         this.setPage();
+
+        func.get('dealers', { orderby: 'crdate_desc' }).then(res => {
+            this.setState({ loading: false });
+            if (res.status === 200) {
+                this.setState({
+                    csvData: res.data.map(row => {
+                        return {
+                            'ID': row.uuid,
+                            'Name': row.name,
+                            'Contact Person': row.contact_name,
+                            'Contact Number': row.contact_phones,
+                            'Location': row.location.region + ' / ' + row.location.city + ' / ' + row.location.area,
+                            'Does delivery': row.delivery ? 'Yes' : 'No',
+                            'Creation Date': moment(row.crdate).format('LLL')
+                        }
+                    })
+                });
+            }
+        });
     }
 
     setPage() {
@@ -37,23 +56,6 @@ class ReportsDealers extends Component {
                 this.setState({ data: res.data, total: res.count });
             } else {
                 this.setState({ data: [] });
-            }
-        });
-
-        func.get('dealers', { orderby: 'crdate_desc' }).then(res => {
-            this.setState({ loading: false });
-            if (res.status === 200) {
-                this.setState({
-                    csvData: res.data.map(row => {
-                        return {
-                            'Name': row.name,
-                            'Contact Person': row.contact_name,
-                            'Contact Number': row.contact_phones,
-                            'Location': row.location.city + ', ' + row.location.region,
-                            'Creation Date': moment(row.name).format('LLL')
-                        }
-                    })
-                });
             }
         });
     }
@@ -91,7 +93,7 @@ class ReportsDealers extends Component {
                                         </Select> */}
                                     </div>
                                     <div className="col-10 text-right">
-                                        <Button type="primary" size="small" loading={loading}>
+                                        <Button type="dark" size="small" loading={loading}>
                                             <CSVLink data={csvData} filename={`${itype}.csv`} target="_blank">
                                                 Download Report
                                             </CSVLink>
@@ -109,7 +111,7 @@ class ReportsDealers extends Component {
                                         <th>Contact person</th>
                                         <th>Contact number/s</th>
                                         <th>Location</th>
-                                        <th>Premises insured</th>
+                                        <th>Does delivery</th>
                                         <th>Creation date</th>
                                     </tr>
                                 </thead>
@@ -124,9 +126,9 @@ class ReportsDealers extends Component {
                                                 <td>{row.name}</td>
                                                 <td>{row.contact_name}</td>
                                                 <td>{row.contact_phones}</td>
-                                                <td>{row.location.city}, {row.location.region}</td>
-                                                <td>{row.insured ? 'Yes' : 'No'}</td>
-                                                <td>{moment(row.name).format('LLL')}</td>
+                                                <td>{row.location.region} / {row.location.city} / {row.location.area}</td>
+                                                <td>{row.delivery ? 'Yes' : 'No'}</td>
+                                                <td>{moment(row.crdate).format('LLL')}</td>
                                             </tr>
                                         ))
                                     )}

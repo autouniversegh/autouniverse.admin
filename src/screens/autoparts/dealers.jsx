@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Form, Input, Select, Pagination, Popconfirm, notification } from 'antd';
+import { CSVLink } from 'react-csv';
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
@@ -96,11 +97,15 @@ class Dealers extends Component {
                                     </div>
                                     <div className="col-5 text-right">
                                         {func.hasR('del_up') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-cloud-upload"></i> &nbsp; Upload dealers</Button>
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}>
+                                                <i className="icon-cloud-upload"></i> &nbsp; Upload dealers
+                                            </Button>
                                         )}
                                         {' '}
                                         {func.hasR('del_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}>
+                                                <i className="icon-plus"></i> &nbsp; Add new
+                                            </Button>
                                         )}
                                     </div>
                                 </div>

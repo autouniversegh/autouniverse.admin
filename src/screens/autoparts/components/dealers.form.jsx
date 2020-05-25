@@ -1,9 +1,8 @@
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, Input, Select, notification, Cascader } from 'antd';
-
-import * as func from '../../../providers/functions';
 import { GalleryImageCard, GalleryContent } from '../../../components';
+import * as func from '../../../providers/functions';
 
 const DealersFormScreen = props => {
     const { row, form: { getFieldDecorator, getFieldValue, validateFields, setFieldsValue, resetFields }, visible, _utils: { locations } } = props;
@@ -39,6 +38,22 @@ const DealersFormScreen = props => {
         setLocation({ region: e[0], city: e[1], area: e[2] });
     }
 
+    const uploadSuccess = (data) => {
+        images.names.push(data.name);
+        images.links.push(data.link);
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('name') });
+    }
+    const remove = (image) => {
+        let i = images.names.indexOf(image);
+        images.names.splice(i, 1);
+        images.links.splice(i, 1);
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('name') });
+    }
+
     const submit = e => {
         e.preventDefault();
         validateFields((err, v) => {
@@ -65,22 +80,6 @@ const DealersFormScreen = props => {
                 });
             }
         });
-    }
-
-    const uploadSuccess = (data) => {
-        images.names.push(data.name);
-        images.links.push(data.link);
-
-        setImages(images);
-        setFieldsValue({ name: getFieldValue('name') });
-    }
-    const remove = (image) => {
-        let i = images.names.indexOf(image);
-        images.names.splice(i, 1);
-        images.links.splice(i, 1);
-
-        setImages(images);
-        setFieldsValue({ name: getFieldValue('name') });
     }
 
     return (
@@ -191,7 +190,7 @@ const DealersFormScreen = props => {
                     </div>
                     <div className="col-12 col-lg-4">
                         {!getFieldValue('name') && (
-                            <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>dealer name</b> to activate image/s upload</div>
+                            <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>service name</b> to activate image/s upload</div>
                         )}
                         {getFieldValue('name') && (
                             <GalleryContent

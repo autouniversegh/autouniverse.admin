@@ -138,7 +138,7 @@ class Autoservices extends Component {
                                         data.map((row) => (
                                             <tr key={row.uuid} className={edited === row.uuid ? 'animated shake bg-gray-100' : ''}>
                                                 <td>{i++}</td>
-                                                <td><img className="img-thumbnail" width="80px" src={row.logo ? row.logo_link : defaultImage} alt={row.name} /></td>
+                                                <td><img className="img-thumbnail" width="80px" src={row.images ? row.image_links[0] : defaultImage} alt={row.name} /></td>
                                                 <td>{row.name}</td>
                                                 <td>{row.category.name}</td>
                                                 <td>
@@ -146,8 +146,9 @@ class Autoservices extends Component {
                                                     Phone: {row.contact_phones}
                                                 </td>
                                                 <td>
-                                                    Location: {row.location.region} / {row.location.city} <br />
-                                                    Premises Insured: {row.insurance ? 'YES' : 'NO'}
+                                                    Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
+                                                    Premises Insured: {row.insurance ? 'YES' : 'NO'} <br />
+                                                    Certifications: {row.certifications}
                                                 </td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
