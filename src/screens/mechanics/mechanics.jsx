@@ -4,6 +4,7 @@ import * as func from '../../providers/functions';
 import moment from 'moment';
 
 import MechanicsForm from './components/mechanics.form';
+import MechanicUpload from './components/mechanics.upload';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';
@@ -12,7 +13,7 @@ const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 
 class Mechanics extends Component {
 
     state = {
-        loading: false, formModal: false,
+        loading: false, formModal: false, uploadModal: false,
         data: [], row: {}, pathname: '', edited: 0, manipulate: 0,
         istatus: '%', iname: '',
         step: 0, currentStep: 1, total: 0
@@ -96,7 +97,14 @@ class Mechanics extends Component {
                                     </div>
                                     <div className="col-5 text-right">
                                         {func.hasR('mec_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}>
+                                                <i className="icon-plus"></i> &nbsp; Add new
+                                            </Button>
+                                        )} {' '}
+                                        {func.hasR('mec_upl') && (
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, uploadModal: true })}>
+                                                <i className="icon-cloud-upload"></i> &nbsp; Mass upload
+                                            </Button>
                                         )}
                                     </div>
                                 </div>
@@ -180,6 +188,17 @@ class Mechanics extends Component {
                     />
                 )}
 
+                {this.state.uploadModal === true && (
+                    <MechanicUpload
+                        {...this.props}
+                        row={this.state.row}
+                        visible={this.state.uploadModal}
+                        onCancel={() => this.setState({ row: {}, uploadModal: false })}
+                        onOK={(a, e) => {
+                            this.getData();
+                        }}
+                    />
+                )}
 
             </React.Fragment>
         );

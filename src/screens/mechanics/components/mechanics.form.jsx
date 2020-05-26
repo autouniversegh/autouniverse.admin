@@ -86,10 +86,10 @@ const MechanicFormScreen = props => {
     return (
         <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={1200} maskClosable={false}
             footer={[
-                <Button key="back" disabled={submitting} onClick={() => props.onCancel()}>
+                <Button key="back" type="danger" className="pull-left" disabled={submitting} onClick={() => props.onCancel()}>
                     Close
                 </Button>,
-                <Button key="submit" type="primary" loading={submitting} onClick={submit}>
+                <Button key="submit" type="dark" loading={submitting} onClick={submit}>
                     Save
                 </Button>
             ]}

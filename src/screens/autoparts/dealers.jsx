@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Button, Form, Input, Select, Pagination, Popconfirm, notification } from 'antd';
-import { CSVLink } from 'react-csv';
 import * as func from '../../providers/functions';
 import moment from 'moment';
 

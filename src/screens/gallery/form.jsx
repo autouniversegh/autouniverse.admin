@@ -61,11 +61,11 @@ const GalleryFormScreen = props => {
     return (
         <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={900} maskClosable={false}
             footer={[
-                <Button key="back" disabled={submitting} onClick={() => props.onCancel()}>
+                <Button key="back" type="danger" className="pull-left" disabled={submitting} onClick={() => props.onCancel()}>
                     Close
                 </Button>,
                 <Button key="submit" type="dark" loading={submitting} onClick={submit}>
-                    Submit
+                    Save
                 </Button>
             ]}
             style={{ top: 20 }} className={`${errMessage ? 'animated shake' : ''}`}
