@@ -2,11 +2,11 @@ import { SET_SITE_LANG, SET_PAGE_TITLE, SET_PAGE_SUB_TITLE, SET_SET_SETTINGS } f
 import * as func from '../../providers/functions';
 
 const initialState = {
-    pageTitle: 'AutoUniverse',
+    pageTitle: 'Auto Universe',
     pageSubTitle: '',
     lang: 'en',
 
-    carparts: func.getStorageJson('carparts'),
+    cars: func.getStorageJson('cars'),
     locations: func.getStorageJson('locations'),
     settings: func.getStorageJson('settings'),
 

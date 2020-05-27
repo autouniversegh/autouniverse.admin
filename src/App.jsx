@@ -41,10 +41,10 @@ class App extends React.Component {
         func.setStorageJson('settings', res.data);
       }
     });
-    func.get('settings/carparts').then((res) => {
+    func.get('settings/cars').then((res) => {
       if (res.status === 200) {
-        this.props.setSetSettings('carparts', res.data);
-        func.setStorageJson('carparts', res.data);
+        this.props.setSetSettings('cars', res.data);
+        func.setStorageJson('cars', res.data);
       }
     });
     func.get('settings/locations').then((res) => {

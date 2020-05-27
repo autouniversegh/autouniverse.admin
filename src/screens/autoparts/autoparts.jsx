@@ -129,7 +129,7 @@ class Autoparts extends Component {
                                         data.map((row) => (
                                             <tr key={row.uuid} className={edited === row.uuid ? 'animated shake bg-gray-100' : ''}>
                                                 <td>{i++}</td>
-                                                <td><img className="img-thumbnail" width="80px" src={row.image ? row.image_link : defaultImage} alt={row.name} /></td>
+                                                <td><img className="img-thumbnail" width="80px" src={row.images ? row.image_links[0] : defaultImage} alt={row.name} /></td>
                                                 <td>{row.name}</td>
                                                 <td>{row.dealer.name}</td>
                                                 <td>GHS{row.price}</td>

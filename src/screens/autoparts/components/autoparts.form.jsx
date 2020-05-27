@@ -3,13 +3,12 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, Input, Select, notification } from 'antd';
 
 import * as func from '../../../providers/functions';
+import { GalleryContent, GalleryImageCard } from '../../../components';
 
 const AutopartFormScreen = props => {
-    const defaultImage = '/assets/noimage.jpg';
-    const { row, form: { getFieldDecorator, validateFields, resetFields }, visible } = props;
+    const { row, form: { getFieldDecorator, validateFields, getFieldValue, setFieldsValue, resetFields }, visible, _utils: { cars } } = props;
 
-    const [file, setFile] = useState(null);
-    const [image, setImage] = useState('');
+    const [images, setImages] = useState({ names: [], links: [] });
     const [method, setMethod] = useState('');
     const [dealers, setDealers] = useState([]);
     const [errMessage, setErrMessage] = useState('');
@@ -20,11 +19,13 @@ const AutopartFormScreen = props => {
         if (row.id) {
             setModalTitle('Edit autopart');
             setMethod('put');
-            setImage(row.image ? row.image_link : defaultImage);
+            setImages({
+                names: row.images ? row.images.split(',') : [],
+                links: row.images ? row.image_links : []
+            });
         } else {
             setModalTitle('Add autopart');
             setMethod('post');
-            setImage(defaultImage);
         }
 
         func.get('dealers', { status: 1 }).then(res => {
@@ -36,25 +37,20 @@ const AutopartFormScreen = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const addImage = (e) => {
-        var target = e.target.files[0];
-        var imageInput = document.getElementById('image');
-        var image = imageInput.files[0];
-        var reader = new FileReader();
-        reader.onload = function (r) {
-            setFile(target);
-            setImage(reader.result);
-        }
-        reader.readAsDataURL(image);
+    const uploadSuccess = (data) => {
+        images.names.push(data.name);
+        images.links.push(data.link);
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('name') });
     }
-    const removeImage = () => {
-        if (method === 'post') {
-            setFile(null);
-            setImage(defaultImage);
-        } else {
-            setFile(null);
-            setImage(row.image_link);
-        }
+    const removeImage = (image) => {
+        let i = images.names.indexOf(image);
+        images.names.splice(i, 1);
+        images.links.splice(i, 1);
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('name') });
     }
 
     const submit = e => {
@@ -63,43 +59,22 @@ const AutopartFormScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                var imoge = row.image || '';
-                if (file) {
-                    func.postFile('upload', { folder: 'autoparts', 'file': file, name: v.name, resize: '800,800' }).then(res => {
-                        if (res.status === 200) {
-                            imoge = res.data[0];
-                            submitGo(v, imoge);
+                v['images'] = images.names;
+                func[method](`autoparts${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
+                    setSubmitting(false);
+                    if (res.status === 200) {
+                        props.onOK(method, res.data);
+                        props.onCancel();
+                        resetFields();
+                        notification.success({ message: res.message });
+                    } else {
+                        if (res.status === 412) {
+                            setErrMessage(res.data.join('<br />'));
                         } else {
-                            setSubmitting(false);
-                            if (res.status === 412) {
-                                setErrMessage(res.data.join('<br />'));
-                            } else {
-                                setErrMessage(res.message);
-                            }
+                            setErrMessage(res.message);
                         }
-                    });
-                } else {
-                    submitGo(v, imoge);
-                }
-            }
-        });
-    }
-
-    const submitGo = (v, imoge) => {
-        v['image'] = imoge;
-        func[method](`autoparts${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
-            setSubmitting(false);
-            if (res.status === 200) {
-                props.onOK(method, res.data);
-                props.onCancel();
-                resetFields();
-                notification.success({ message: res.message });
-            } else {
-                if (res.status === 412) {
-                    setErrMessage(res.data.join('<br />'));
-                } else {
-                    setErrMessage(res.message);
-                }
+                    }
+                });
             }
         });
     }
@@ -119,19 +94,7 @@ const AutopartFormScreen = props => {
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="row">
-                    <div className="col-12 col-lg-3">
-                        <img className="img-thumbnail" src={image} alt={row.name} width="100%" />
-                        <input type="file" name="image" id="image" accept="image/*" onChange={addImage} className="hide" />
-                        <div className="row row-xs">
-                            <div className="col-12">
-                                <Button type="dark" size="small" block className="mg-b-5" onClick={() => window.$('#image').click()}>Choose image</Button>
-                            </div>
-                            <div className="col-12">
-                                {file && (<Button type="danger" size="small" block onClick={removeImage}>Remove image</Button>)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-12 col-lg-9">
+                    <div className="col-12 col-lg-8">
                         <div className="row row-xs">
                             <div className="col-12 col-lg-6">
                                 <Form.Item label="Dealer">
@@ -163,7 +126,11 @@ const AutopartFormScreen = props => {
                                         rules: [{ required: true, message: <span /> }],
                                         initialValue: row.car
                                     })(
-                                        <Input autoComplete="off" size="large" disabled={submitting} />
+                                        <Select showSearch optionFilterProp="children" size="large" placeholder="Choose a car make" disabled={submitting}>
+                                            {Object.keys(cars).map(car => (
+                                                <Select.Option value={car}>{car}</Select.Option>
+                                            ))}
+                                        </Select>
                                     )}
                                 </Form.Item>
                             </div>
@@ -173,7 +140,11 @@ const AutopartFormScreen = props => {
                                         rules: [{ required: true, message: <span /> }],
                                         initialValue: row.car_model
                                     })(
-                                        <Input autoComplete="off" size="large" disabled={submitting} />
+                                        <Select showSearch optionFilterProp="children" size="large" placeholder="Choose a car model" disabled={!getFieldValue('car') || submitting}>
+                                            {getFieldValue('car') && cars[getFieldValue('car')].map(car => (
+                                                <Select.Option value={car}>{car}</Select.Option>
+                                            ))}
+                                        </Select>
                                     )}
                                 </Form.Item>
                             </div>
@@ -230,6 +201,21 @@ const AutopartFormScreen = props => {
                                 </Form.Item>
                             </div>
                         </div>
+                    </div>
+                    <div className="col-12 col-lg-4">
+                        {!getFieldValue('name') && (
+                            <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>autopart name</b> to activate image/s upload</div>
+                        )}
+                        {getFieldValue('name') && (
+                            <GalleryContent
+                                folder="autoparts" listType="picture" multiple={true} showUploadList={false} uploadSuccess={uploadSuccess}
+                                uploadData={{ name: getFieldValue('name') }}
+                            />
+                        )}
+                        <div className="clearfix" />
+                        {images.links.map((link, i) => (
+                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => removeImage(e)} folder="autoparts" />
+                        ))}
                     </div>
                 </div>
             </Form>

@@ -46,7 +46,7 @@ const EmergenciesFormScreen = props => {
         setImages(images);
         setFieldsValue({ name: getFieldValue('name') });
     }
-    const remove = (image) => {
+    const removeImage = (image) => {
         let i = images.names.indexOf(image);
         images.names.splice(i, 1);
         images.links.splice(i, 1);
@@ -218,7 +218,7 @@ const EmergenciesFormScreen = props => {
                         )}
                         <div className="clearfix" />
                         {images.links.map((link, i) => (
-                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => remove(e)} folder="emergencies" />
+                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => removeImage(e)} folder="emergencies" />
                         ))}
                     </div>
                 </div>
