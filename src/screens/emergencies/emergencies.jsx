@@ -4,7 +4,7 @@ import * as func from '../../providers/functions';
 import moment from 'moment';
 
 import EmergenciesForm from './components/emergencies.form';
-import EmergenciesUpload from './components/emergencies.upload';
+import { MassUpload } from '../../components';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';
@@ -115,7 +115,7 @@ class Emergencies extends Component {
                                                 <i className="icon-plus"></i> &nbsp; Add new
                                             </Button>
                                         )}
-                                        {func.hasR('mec_upl') && (
+                                        {func.hasR('emg_upl') && (
                                             <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, uploadModal: true })}>
                                                 <i className="icon-cloud-upload"></i> &nbsp; Mass upload
                                             </Button>
@@ -206,8 +206,9 @@ class Emergencies extends Component {
                 )}
 
                 {this.state.uploadModal === true && (
-                    <EmergenciesUpload
+                    <MassUpload
                         {...this.props}
+                        module="emergencies"
                         row={this.state.row}
                         visible={this.state.uploadModal}
                         onCancel={() => this.setState({ row: {}, uploadModal: false })}

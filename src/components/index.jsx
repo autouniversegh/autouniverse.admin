@@ -5,5 +5,6 @@ import Loading from './Loading';
 import Fallback from './Fallback';
 import GalleryImageCard from './GalleryImageCard';
 import GalleryContent from './GalleryContent';
+import MassUpload from './MassUpload';
 
-export { MediaCard, MediaList, CommentCard, Loading, Fallback, GalleryContent, GalleryImageCard };
+export { MediaCard, MediaList, CommentCard, Loading, Fallback, GalleryContent, GalleryImageCard, MassUpload };

@@ -1,10 +1,10 @@
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, notification, Input } from 'antd';
-import * as func from '../../../providers/functions';
+import * as func from '../providers/functions';
 
-const EmergenciesUploadScreen = props => {
-    const { form: { validateFields, resetFields }, visible } = props;
+const DealersUploadScreen = props => {
+    const { form: { validateFields, resetFields }, visible, module } = props;
 
     const [file, setFile] = useState(null);
     const [errMessage, setErrMessage] = useState('');
@@ -12,7 +12,7 @@ const EmergenciesUploadScreen = props => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        setModalTitle('Mass upload emergencies');
+        setModalTitle(`Mass upload ${module}`);
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -34,7 +34,7 @@ const EmergenciesUploadScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                func.postFile(`emergencies/uploads`, { file }).then((res) => {
+                func.postFile(`${module}/uploads`, { file }).then((res) => {
                     setSubmitting(false);
                     if (res.status === 200) {
                         props.onOK('post', res.data);
@@ -68,7 +68,7 @@ const EmergenciesUploadScreen = props => {
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="alert alert-info pd-5 text-center">
-                    <a href={`${window.location.host}/assets/sample.emergencies.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
+                    <a href={`${window.location.host}/assets/sample.${module}.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
                 </div>
 
                 <Input id="file" className="form-controls" type="file" onChange={formChange} />
@@ -78,5 +78,5 @@ const EmergenciesUploadScreen = props => {
 
 };
 
-const EmergenciesUpload = Form.create()(EmergenciesUploadScreen);
-export default EmergenciesUpload;
+const DealersUpload = Form.create()(DealersUploadScreen);
+export default DealersUpload;

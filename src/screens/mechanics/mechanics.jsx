@@ -4,7 +4,7 @@ import * as func from '../../providers/functions';
 import moment from 'moment';
 
 import MechanicsForm from './components/mechanics.form';
-import MechanicUpload from './components/mechanics.upload';
+import { MassUpload } from '../../components';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';
@@ -189,8 +189,9 @@ class Mechanics extends Component {
                 )}
 
                 {this.state.uploadModal === true && (
-                    <MechanicUpload
+                    <MassUpload
                         {...this.props}
+                        module="mechanics"
                         row={this.state.row}
                         visible={this.state.uploadModal}
                         onCancel={() => this.setState({ row: {}, uploadModal: false })}

@@ -35,7 +35,7 @@ const OtherServicesScreen = props => {
     }, []);
 
     const setFormLocation = (e) => {
-        setLocation({ region: e[0], city: e[1] });
+        setLocation({ region: e[0], city: e[1], area: e[2] });
     }
 
     const uploadSuccess = (data) => {

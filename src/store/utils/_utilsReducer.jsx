@@ -18,24 +18,21 @@ const initialState = {
             {
                 name: 'Auto Parts', url: '/autoparts', icon: 'icon-wrench', code: 'itm',
                 children: [
-                    { name: 'Dealers', url: '/autoparts/dealers', code: 'del' },
-                    { name: 'AutoParts', url: '/autoparts/autoparts', code: 'itm' },
-                    { name: 'Orders', url: '/autoparts/order', code: 'itm_ord' },
+                    { name: 'Manage Dealers', url: '/autoparts/dealers', code: 'del' },
+                    { name: 'Manage AutoParts', url: '/autoparts/autoparts', code: 'itm' },
                 ]
             },
             {
                 name: 'Mechanics', url: '/mechanics', icon: 'icon-anchor', code: 'mec',
-                children: [
+                childrens: [
                     { name: 'Mechanics', url: '/mechanics', code: 'mec' },
-                    { name: 'Orders', url: '/mechanics/orders', code: 'mec_ord' }
                 ]
             },
             {
                 name: 'Emergencies', url: '/emergencies', icon: 'icon-fire', code: 'emg',
                 children: [
-                    { name: 'Emergency Services', url: '/emergencies', code: 'emg' },
-                    { name: 'Manage Categories', url: '/emergencies/categories', code: 'emg_ctg' },
-                    { name: 'Orders', url: '/emergencies/orders', code: 'emg_ord' }
+                    { name: 'Manage Emergencies', url: '/emergencies', code: 'emg' },
+                    { name: 'Manage Categories', url: '/emergencies/categories', code: 'emg_ctg' }
                 ]
             },
             {
@@ -43,7 +40,6 @@ const initialState = {
                 children: [
                     { name: 'Other Services', url: '/otherservices', code: 'aut' },
                     { name: 'Manage Categories', url: '/otherservices/categories', code: 'aut_ctg' },
-                    { name: 'Orders', url: '/otherservices/orders', code: 'aut_ord' }
                 ]
             },
             {
