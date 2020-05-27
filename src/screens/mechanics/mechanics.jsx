@@ -13,7 +13,7 @@ const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 
 class Mechanics extends Component {
 
     state = {
-        loading: false, formModal: false, uploadModal: false,
+        loading: false, formModal: false, uploadModal: true,
         data: [], row: {}, pathname: '', edited: 0, manipulate: 0,
         istatus: '%', iname: '',
         step: 0, currentStep: 1, total: 0
