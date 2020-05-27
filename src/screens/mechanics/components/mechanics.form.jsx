@@ -159,7 +159,11 @@ const MechanicFormScreen = props => {
                                         rules: [{ required: true, message: <span /> }],
                                         initialValue: Object.values(row.location || {})
                                     })(
-                                        <Cascader size="large" disabled={submitting} options={locOptions} onChange={(e) => setFormLocation(e)} />
+                                        <Cascader
+                                            size="large" disabled={submitting} options={locOptions}
+                                            onChange={(e) => setFormLocation(e)}
+                                            showSearch={(i, p) => { return p.some(option => option.label.toLowerCase().indexOf(i.toLowerCase()) > -1); }}
+                                        />
                                     )}
                                 </Form.Item>
                             </div>
