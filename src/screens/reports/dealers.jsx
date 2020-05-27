@@ -17,7 +17,7 @@ class ReportsDealers extends Component {
     componentDidMount() {
         this.setPage();
 
-        func.get('dealers', { orderby: 'crdate_desc' }).then(res => {
+        func.get('dealers', { orderby: 'crdate_desc', status: 1 }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({

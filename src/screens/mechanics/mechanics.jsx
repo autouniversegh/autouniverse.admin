@@ -13,7 +13,7 @@ const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 
 class Mechanics extends Component {
 
     state = {
-        loading: false, formModal: false, uploadModal: true,
+        loading: false, formModal: false, uploadModal: false,
         data: [], row: {}, pathname: '', edited: 0, manipulate: 0,
         istatus: '%', iname: '',
         step: 0, currentStep: 1, total: 0
@@ -97,12 +97,12 @@ class Mechanics extends Component {
                                     </div>
                                     <div className="col-5 text-right">
                                         {func.hasR('mec_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}>
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, formModal: true })}>
                                                 <i className="icon-plus"></i> &nbsp; Add new
                                             </Button>
-                                        )} {' '}
+                                        )}
                                         {func.hasR('mec_upl') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, uploadModal: true })}>
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, uploadModal: true })}>
                                                 <i className="icon-cloud-upload"></i> &nbsp; Mass upload
                                             </Button>
                                         )}

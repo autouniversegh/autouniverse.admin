@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, notification, Input } from 'antd';
 import * as func from '../../../providers/functions';
 
-const MechanicUploadScreen = props => {
+const EmergenciesUploadScreen = props => {
     const { form: { validateFields, resetFields }, visible } = props;
 
     const [file, setFile] = useState(null);
@@ -12,7 +12,7 @@ const MechanicUploadScreen = props => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        setModalTitle('Mass upload mechanics');
+        setModalTitle('Mass upload emergencies');
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -34,7 +34,7 @@ const MechanicUploadScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                func.postFile(`mechanics/uploads`, { file }).then((res) => {
+                func.postFile(`emergencies/uploads`, { file }).then((res) => {
                     setSubmitting(false);
                     if (res.status === 200) {
                         props.onOK('post', res.data);
@@ -68,7 +68,7 @@ const MechanicUploadScreen = props => {
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="alert alert-info pd-5 text-center">
-                    <a href={`${window.location.host}/assets/sample.mechanics.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
+                    <a href={`${window.location.host}/assets/sample.emergencies.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
                 </div>
 
                 <Input id="file" className="form-controls" type="file" onChange={formChange} />
@@ -78,5 +78,5 @@ const MechanicUploadScreen = props => {
 
 };
 
-const MechanicUpload = Form.create()(MechanicUploadScreen);
-export default MechanicUpload;
+const EmergenciesUpload = Form.create()(EmergenciesUploadScreen);
+export default EmergenciesUpload;
