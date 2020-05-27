@@ -3,13 +3,13 @@ import { Button, Form, Input, Select, Pagination, Popconfirm, notification } fro
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
-import AutoservicesForm from './components/autoservices.form';
+import OtherServicesForm from './components/otherservices.form';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Deleted']];
 
-class Autoservices extends Component {
+class OtherServices extends Component {
 
     state = {
         loading: false, formModal: false,
@@ -23,7 +23,7 @@ class Autoservices extends Component {
     }
 
     setPage() {
-        this.props.setPageTitle('Auto Services');
+        this.props.setPageTitle('Other Services');
         this.getData();
     }
 
@@ -35,7 +35,7 @@ class Autoservices extends Component {
     getData = () => {
         this.setState({ loading: true, total: 0 });
         const { istatus, iname, icategory, step } = this.state;
-        func.get('autoservices', { name: `%${iname}%`, category: icategory, limit: `${step},${limit}`, status: istatus }).then(res => {
+        func.get('otherservices', { name: `%${iname}%`, category: icategory, limit: `${step},${limit}`, status: istatus }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
@@ -44,7 +44,7 @@ class Autoservices extends Component {
             }
         });
 
-        func.get('autoservices-categories', { status: 1, orderby: 'name_asc' }).then(res => {
+        func.get('otherservices-categories', { status: 1, orderby: 'name_asc' }).then(res => {
             if (res.status === 200) {
                 this.setState({ categories: res.data });
             }
@@ -65,7 +65,7 @@ class Autoservices extends Component {
     delete = (row) => {
         const { uuid } = row;
         this.setState({ submitting: true, edited: 0 });
-        func.delte(`autoservices/${row.uuid}`).then((res) => {
+        func.delte(`otherservices/${row.uuid}`).then((res) => {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
@@ -175,7 +175,7 @@ class Autoservices extends Component {
 
 
                 {this.state.formModal === true && (
-                    <AutoservicesForm
+                    <OtherServicesForm
                         {...this.props}
                         row={this.state.row}
                         visible={this.state.formModal}
@@ -203,4 +203,4 @@ class Autoservices extends Component {
     }
 }
 
-export default Autoservices;
+export default OtherServices;

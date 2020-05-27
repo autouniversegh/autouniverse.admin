@@ -30,7 +30,7 @@ const CategoriesFormScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                func[method](`autoservices-categories${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
+                func[method](`otherservices-categories${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
                     setSubmitting(false);
                     if (res.status === 200) {
                         props.onOK(method, res.data);

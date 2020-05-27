@@ -89,7 +89,7 @@ class ReportsDealers extends Component {
                                             <Select.Option value="dealers">Autopart dealers</Select.Option>
                                             <Select.Option value="mechanics">Mechanics</Select.Option>
                                             <Select.Option value="emergencies">Emergencies</Select.Option>
-                                            <Select.Option value="autoservices">Other services</Select.Option>
+                                            <Select.Option value="otherservices">Other services</Select.Option>
                                         </Select> */}
                                     </div>
                                     <div className="col-10 text-right">

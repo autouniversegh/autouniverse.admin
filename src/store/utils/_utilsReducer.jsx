@@ -39,11 +39,11 @@ const initialState = {
                 ]
             },
             {
-                name: 'Other Auto Services', url: '/autoservices', icon: 'icon-cursor', code: 'aut',
+                name: 'Other Services', url: '/otherservices', icon: 'icon-cursor', code: 'aut',
                 children: [
-                    { name: 'Other Auto Services', url: '/autoservices', code: 'aut' },
-                    { name: 'Manage Categories', url: '/autoservices/categories', code: 'aut_ctg' },
-                    { name: 'Orders', url: '/autoservices/orders', code: 'aut_ord' }
+                    { name: 'Other Services', url: '/otherservices', code: 'aut' },
+                    { name: 'Manage Categories', url: '/otherservices/categories', code: 'aut_ctg' },
+                    { name: 'Orders', url: '/otherservices/orders', code: 'aut_ord' }
                 ]
             },
             {

@@ -32,7 +32,7 @@ const Dashboard = React.lazy(() => import('./screens/dashboard'));
 const AutoParts = React.lazy(() => import('./screens/autoparts'));
 const Mechanics = React.lazy(() => import('./screens/mechanics'));
 const Emergencies = React.lazy(() => import('./screens/emergencies'));
-const Autoservices = React.lazy(() => import('./screens/autoservices'));
+const Autoservices = React.lazy(() => import('./screens/otherservices'));
 const ExportAdvices = React.lazy(() => import('./screens/expertadvices'));
 const Reports = React.lazy(() => import('./screens/reports'));
 const Users = React.lazy(() => import('./screens/users'));
@@ -44,7 +44,7 @@ const routes = [
     { path: '/autoparts', name: 'Autoparts', component: AutoParts },
     { path: '/mechanics', name: 'Mechanics', component: Mechanics },
     { path: '/emergencies', name: 'Emergency Services', component: Emergencies },
-    { path: '/autoservices', name: 'Other auto services', component: Autoservices },
+    { path: '/otherservices', name: 'Other auto services', component: Autoservices },
     { path: '/expertadvices', name: 'Expert advice', component: ExportAdvices },
     { path: '/users', name: 'Users', component: Users },
     { path: '/reports', name: 'Reports', component: Reports },

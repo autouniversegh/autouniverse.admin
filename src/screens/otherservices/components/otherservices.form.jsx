@@ -4,7 +4,7 @@ import { Modal, Form, Button, Input, Select, Cascader, notification } from 'antd
 import { GalleryImageCard, GalleryContent } from '../../../components';
 import * as func from '../../../providers/functions';
 
-const AutoservicesFormScreen = props => {
+const OtherServicesScreen = props => {
     const { row, form: { getFieldDecorator, validateFields, getFieldValue, setFieldsValue, resetFields }, visible, categories, _utils: { locations } } = props;
 
     const [images, setImages] = useState({ names: [], links: [] });
@@ -64,7 +64,7 @@ const AutoservicesFormScreen = props => {
                 v['location'] = location;
                 v['certifications'] = v.certifications.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
-                func[method](`autoservices${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
+                func[method](`otherservices${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
                     setSubmitting(false);
                     if (res.status === 200) {
                         props.onOK(method, res.data);
@@ -207,13 +207,13 @@ const AutoservicesFormScreen = props => {
                         )}
                         {getFieldValue('name') && (
                             <GalleryContent
-                                folder="autoservices" listType="picture" multiple={true} showUploadList={false} uploadSuccess={uploadSuccess}
+                                folder="otherservices" listType="picture" multiple={true} showUploadList={false} uploadSuccess={uploadSuccess}
                                 uploadData={{ name: getFieldValue('name') }}
                             />
                         )}
                         <div className="clearfix" />
                         {images.links.map((link, i) => (
-                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => remove(e)} folder="autoservices" />
+                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => remove(e)} folder="otherservices" />
                         ))}
                     </div>
                 </div>
@@ -223,5 +223,5 @@ const AutoservicesFormScreen = props => {
 
 };
 
-const AutoservicesForm = Form.create()(AutoservicesFormScreen);
-export default AutoservicesForm;
+const OtherServices = Form.create()(OtherServicesScreen);
+export default OtherServices;

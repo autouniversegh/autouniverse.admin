@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Button, Form, Input, Select, Pagination, Popconfirm, notification } from 'antd';
 import * as func from '../../providers/functions';
 import moment from 'moment';
+import { CSVLink } from 'react-csv';
 
 import CategoriesForm from './components/categories.form';
 
@@ -12,13 +13,28 @@ class Categories extends Component {
 
     state = {
         loading: false, formModal: false,
-        data: [], row: {}, pathname: '', edited: 0,
+        data: [], csvData: [], row: {}, pathname: '', edited: 0,
         istatus: '%', iname: '',
         step: 0, currentStep: 1, total: 0
     }
 
     componentDidMount() {
         this.setPage();
+
+        func.get('emergencies-categories', { orderby: 'name_asc', status: 1 }).then(res => {
+            this.setState({ loading: false });
+            if (res.status === 200) {
+                this.setState({
+                    csvData: res.data.map(row => {
+                        return {
+                            'ID': row.uuid,
+                            'Name': row.name,
+                            'Description': row.description
+                        }
+                    })
+                });
+            }
+        });
     }
 
     setPage() {
@@ -34,7 +50,7 @@ class Categories extends Component {
     getData = () => {
         this.setState({ loading: true, total: 0 });
         const { istatus, iname, step } = this.state;
-        func.get('autoservices-categories', { name: `%${iname}%`, limit: `${step},${limit}`, status: istatus }).then(res => {
+        func.get('otherservices-categories', { name: `%${iname}%`, limit: `${step},${limit}`, status: istatus }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
@@ -58,7 +74,7 @@ class Categories extends Component {
     delete = (row) => {
         const { uuid } = row;
         this.setState({ submitting: true, edited: 0 });
-        func.delte(`autoservices-categories/${row.uuid}`).then((res) => {
+        func.delte(`otherservices-categories/${row.uuid}`).then((res) => {
             this.setState({ submitting: false });
             if (res.status === 200) {
                 this.setState({ data: this.state.data.filter(row => row.uuid !== uuid) });
@@ -71,7 +87,7 @@ class Categories extends Component {
 
     render() {
         let i = this.state.step + 1;
-        const { loading, data, submitting, total, currentStep, edited, istatus } = this.state;
+        const { loading, data, submitting, total, currentStep, edited, istatus, csvData } = this.state;
 
         return (
             <React.Fragment>
@@ -95,8 +111,15 @@ class Categories extends Component {
                                     </div>
                                     <div className="col-5 text-right">
                                         {func.hasR('aut_ctg_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, formModal: true })}>
+                                                <i className="icon-plus"></i> &nbsp; Add new
+                                            </Button>
                                         )}
+                                        <Button type="dark" size="small" className="mg-r-5">
+                                            <CSVLink data={csvData} filename={`otherservices-categories.csv`} target="_blank">
+                                                <i className="icon-cloud-download"></i> &nbsp; Extract
+                                            </CSVLink>
+                                        </Button>
                                     </div>
                                 </div>
                             </Form>
