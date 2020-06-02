@@ -69,9 +69,10 @@ const initialState = {
                 ]
             },
             {
-                name: 'Setup', url: '/setup', icon: 'icon-settings',
+                name: 'Setup', url: '/setup', icon: 'icon-settings', code: 'set',
                 children: [
-                    { name: 'Subscriptions', url: '/setup/subscriptions' }
+                    { name: 'Subscriptions', url: '/setup/subscriptions', code: 'set_sub', },
+                    { name: 'Services Description', url: '/setup/descriptions', code: 'set_desc', }
                 ]
             },
             {

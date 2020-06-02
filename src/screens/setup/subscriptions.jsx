@@ -67,7 +67,7 @@ class SetupSubsScreen extends Component {
 
                     <div className="card mg-b-25">
                         <div className="card-header">
-                            <Button type="primary" htmlType="submit" loading={this.state.submitting}>&nbsp; &nbsp; Save changes &nbsp; &nbsp;</Button>
+                            <Button type="primary" htmlType="submit" loading={this.state.submitting}>&nbsp; Save changes &nbsp;</Button>
                         </div>
                     </div>
                 </Form>
