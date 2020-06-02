@@ -4,10 +4,18 @@ import axios from 'axios';
 
 export const api = {
     space: 'on',
-    apiKey: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt6TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu5',
+
+    key_of: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt1TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu1',
+    key_qa: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt4TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu4',
+    key_on: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt6TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu6',
+
     server_of: 'http://localhost/autouniverse/api/v1/api/',
     server_qa: 'http://qa-api.autouniversegh.com/v1/api/',
-    server_on: 'http://api.autouniversegh.com/v1/api/'
+    server_on: 'http://api.autouniversegh.com/v1/api/',
+
+    platform_of: 'localhost',
+    platform_qa: 'qa-admin.autouniversegh.com',
+    platform_on: 'admin.autouniversegh.com',
 }
 
 export const initialize = () => {
@@ -19,6 +27,8 @@ export const initialize = () => {
         api.space = 'on';
     }
     api.apiURL = api[`server_${api.space}`];
+    api.apiKey = api[`key_${api.space}`];
+    api.apiPlatform = api[`platform_${api.space}`];
     api.apiToken = getStorage('token');
 }
 
@@ -120,6 +130,7 @@ export const post = async (action, data = {}, empty = false) => {
         let response = await fetch(url, {
             method: 'POST',
             headers: {
+                'Platform': `${api.apiPlatform}/${app.version}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'x-access-token': api.apiKey + '.' + api.apiToken
@@ -137,7 +148,8 @@ export const get = async (action, data = {}, empty = false) => {
     return axios({
         method: 'GET', url,
         headers: {
-            Accept: 'application/json',
+            'Platform': `${api.apiPlatform}/${app.version}`,
+            'Accept': 'application/json',
             'Content-Type': 'application/json',
             'x-access-token': api.apiKey + '.' + api.apiToken
         },
@@ -155,6 +167,7 @@ export const put = async (action, data = {}, empty = false) => {
         let response = await fetch(url, {
             method: 'PUT',
             headers: {
+                'Platform': `${api.apiPlatform}/${app.version}`,
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'x-access-token': api.apiKey + '.' + api.apiToken
@@ -172,6 +185,7 @@ export const delte = async (action) => {
         let response = await fetch(api.apiURL + action, {
             method: 'DELETE',
             headers: {
+                'Platform': `${api.apiPlatform}/${app.version}`,
                 'Accept': 'application/json',
                 'x-access-token': api.apiKey + '.' + api.apiToken
             }
@@ -189,6 +203,7 @@ export const postFile = async (action, data = {}, empty = false) => {
         let response = await fetch(url, {
             method: 'POST',
             headers: {
+                'Platform': `${api.apiPlatform}/${app.version}`,
                 'Accept': 'application/json',
                 'x-access-token': api.apiKey + '.' + api.apiToken
             },
@@ -249,9 +264,11 @@ export const hasR = (role) => {
 };
 
 export const chunk = (a, l) => {
-    var results = [];
-    while (a.length) {
-        results.push(a.splice(0, l));
-    }
-    return results;
+    return new Promise(function (resolve) {
+        var results = [];
+        while (a.length) {
+            results.push(a.splice(0, l));
+        }
+        resolve(results);
+    });
 }

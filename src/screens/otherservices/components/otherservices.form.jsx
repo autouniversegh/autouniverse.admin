@@ -45,7 +45,7 @@ const OtherServicesScreen = props => {
         setImages(images);
         setFieldsValue({ name: getFieldValue('name') });
     }
-    const remove = (image) => {
+    const removeImage = (image) => {
         let i = images.names.indexOf(image);
         images.names.splice(i, 1);
         images.links.splice(i, 1);
@@ -217,7 +217,7 @@ const OtherServicesScreen = props => {
                         )}
                         <div className="clearfix" />
                         {images.links.map((link, i) => (
-                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => remove(e)} folder="otherservices" />
+                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => removeImage(e)} folder="otherservices" />
                         ))}
                     </div>
                 </div>

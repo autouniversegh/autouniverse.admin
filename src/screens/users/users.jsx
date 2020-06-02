@@ -24,7 +24,7 @@ class UsersList extends Component {
 
     componentDidUpdate() {
         if (this.state.pathname !== window.location.pathname) {
-            this.setState({ pathname: window.location.pathname }, () => {
+            this.setState({ pathname: window.location.pathname, edited: 0 }, () => {
                 this.props.setPageTitle('Users');
                 this.getData();
             });
@@ -53,11 +53,11 @@ class UsersList extends Component {
             }
         });
 
-        // func.get('users-access', { status: 1, orderby: 'name_asc' }).then(res => {
-        //     if (res.status === 200) {
-        //         this.setState({ access: res.data });
-        //     }
-        // });
+        func.get('users-access', { status: 1, orderby: 'name_asc' }).then(res => {
+            if (res.status === 200) {
+                this.setState({ access: res.data });
+            }
+        });
     }
 
     formChange = (e, name) => {

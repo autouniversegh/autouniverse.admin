@@ -7,8 +7,8 @@ const initialState = {
     lang: 'en',
 
     cars: func.getStorageJson('cars'),
-    locations: func.getStorageJson('locations'),
     settings: func.getStorageJson('settings'),
+    locations: func.getStorageJson('locations'),
 
     navigation: {
         items: [

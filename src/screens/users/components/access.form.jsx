@@ -6,7 +6,6 @@ import * as func from '../../../providers/functions';
 
 const UsersAccessFormScreen = props => {
     const { row, form: { getFieldDecorator, validateFields, resetFields }, visible, _utils: { navigation } } = props;
-    const menus = func.chunk(navigation.items, 3);
 
     const [method, setMethod] = useState('');
     const [errMessage, setErrMessage] = useState('');
@@ -29,13 +28,6 @@ const UsersAccessFormScreen = props => {
 
     const addModule = (checkedKeys, inf) => {
         setCheckedKeys(checkedKeys.checked);
-    }
-    const checkModule = (mod) => {
-        const adata = checkedKeys;
-        if (func.inArray(mod, adata) === true || func.inArray('a', adata) === true) {
-            return true;
-        }
-        return false;
     }
 
     const submit = e => {
@@ -108,26 +100,19 @@ const UsersAccessFormScreen = props => {
                     </div>
                     <div className="col-12 col-lg-8">
                         <div className="bg-gray-100">
-
-                            <Tree checkable={true} selectable={false} onCheck={addModule} defaultExpandAll={true} defaultCheckedKeys={[]} checkStrictly={true}
+                            <Tree checkable={true} selectable={false} onCheck={addModule} defaultExpandAll={true} defaultCheckedKeys={checkedKeys} checkStrictly={true}
                             >
-                                <div className="row">
-                                    {menus.map(items => (
-                                        <div className="col-4">
-                                            {items.map(menu => (
-                                                menu.code && (
-                                                    <Tree.TreeNode title={menu.name} key={menu.code} disabled={submitting}>
-                                                        {menu.children.length > 0 && (
-                                                            menu.children.map(sub => (
-                                                                <Tree.TreeNode title={sub.name} key={sub.code} checked={true} disabled={submitting}></Tree.TreeNode>
-                                                            ))
-                                                        )}
-                                                    </Tree.TreeNode>
-                                                )
-                                            ))}
-                                        </div>
-                                    ))}
-                                </div>
+                                {navigation.items.map(menu => (
+                                    menu.code && (
+                                        <Tree.TreeNode title={menu.name} key={menu.code} disabled={submitting}>
+                                            {menu.children && menu.children.length > 0 && (
+                                                menu.children.map(sub => (
+                                                    <Tree.TreeNode title={sub.name} key={sub.code} checked={true} disabled={submitting}></Tree.TreeNode>
+                                                ))
+                                            )}
+                                        </Tree.TreeNode>
+                                    )
+                                ))}
                             )}
                             </Tree>
                         </div>

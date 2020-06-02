@@ -18,7 +18,7 @@ class LoginForm extends Component {
         validateFields((err, v) => {
             if (!err) {
                 this.setState({ submitting: true, errMessage: '' });
-                func.post('auths/login', v).then(res => {
+                func.post('auth/login', v).then(res => {
                     this.setState({ submitting: false });
                     if (res.status === 200) {
                         const user = res.user;

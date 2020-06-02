@@ -1,15 +1,13 @@
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
 import { Modal, Form, Button, Input, Select, notification } from 'antd';
-
+import { GalleryImageCard, GalleryContent } from '../../../components';
 import * as func from '../../../providers/functions';
 
 const UsersFormScreen = props => {
-    const defaultImage = '/assets/noimage.jpg';
-    const { row, form: { getFieldDecorator, validateFields, resetFields }, visible, access } = props;
+    const { row, form: { getFieldDecorator, validateFields, getFieldValue, setFieldsValue, resetFields }, visible, access } = props;
 
-    const [file, setFile] = useState(null);
-    const [image, setImage] = useState('');
+    const [images, setImages] = useState({ name: '', link: '' });
     const [method, setMethod] = useState('');
     const [errMessage, setErrMessage] = useState('');
     const [modalTitle, setModalTitle] = useState('');
@@ -19,34 +17,30 @@ const UsersFormScreen = props => {
         if (row.id) {
             setModalTitle('Edit user');
             setMethod('put');
-            setImage(row.avatar ? row.avatar_link : defaultImage);
+            setImages({
+                name: row.avatar ? row.avatar : '',
+                link: row.avatar ? row.avatar_link : ''
+            });
         } else {
             setModalTitle('Add user');
             setMethod('post');
-            setImage(defaultImage);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const addImage = (e) => {
-        var target = e.target.files[0];
-        var imageInput = document.getElementById('image');
-        var image = imageInput.files[0];
-        var reader = new FileReader();
-        reader.onload = function (r) {
-            setFile(target);
-            setImage(reader.result);
-        }
-        reader.readAsDataURL(image);
+    const uploadSuccess = (data) => {
+        images['name'] = data.name;
+        images['link'] = data.link;
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('name') });
     }
     const removeImage = () => {
-        if (method === 'post') {
-            setFile(null);
-            setImage(defaultImage);
-        } else {
-            setFile(null);
-            setImage(row.image_link);
-        }
+        images['name'] = ''
+        images['link'] = '';
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('name') });
     }
 
     const submit = e => {
@@ -55,45 +49,24 @@ const UsersFormScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                var imoge = row.image || '';
-                if (file) {
-                    func.postFile('upload', { folder: 'users', 'file': file, name: v.name, resize: '800,800' }).then(res => {
-                        if (res.status === 200) {
-                            imoge = res.data[0];
-                            submitGo(v, imoge);
+                v['avatar'] = images.name;
+                v['phone'] = `+233${v.phone.replace(/^0/, '')}`;
+                v['admin'] = row.admin;
+                func[method](`users${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
+                    setSubmitting(false);
+                    if (res.status === 200) {
+                        props.onOK(method, res.data);
+                        props.onCancel();
+                        resetFields();
+                        notification.success({ message: res.message });
+                    } else {
+                        if (res.status === 412) {
+                            setErrMessage(res.data.join('<br />'));
                         } else {
-                            setSubmitting(false);
-                            if (res.status === 412) {
-                                setErrMessage(res.data.join('<br />'));
-                            } else {
-                                setErrMessage(res.message);
-                            }
+                            setErrMessage(res.message);
                         }
-                    });
-                } else {
-                    submitGo(v, imoge);
-                }
-            }
-        });
-    }
-
-    const submitGo = (v, imoge) => {
-        v['avatar'] = imoge;
-        v['phone'] = `+233${v.phone.replace(/^0/, '')}`;
-        v['admin'] = props.params.admin;
-        func[method](`users${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
-            setSubmitting(false);
-            if (res.status === 200) {
-                props.onOK(method, res.data);
-                props.onCancel();
-                resetFields();
-                notification.success({ message: res.message });
-            } else {
-                if (res.status === 412) {
-                    setErrMessage(res.data.join('<br />'));
-                } else {
-                    setErrMessage(res.message);
-                }
+                    }
+                });
             }
         });
     }
@@ -114,16 +87,17 @@ const UsersFormScreen = props => {
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="row">
                     <div className="col-12 col-lg-3">
-                        <img className="img-thumbnail img-circle" src={image} alt={row.name} width="100%" />
-                        <input type="file" name="image" id="image" accept="image/*" onChange={addImage} className="hide" />
-                        <div className="row row-xs">
-                            <div className="col-12">
-                                <Button type="dark" size="small" block className="mg-b-5" onClick={() => window.$('#image').click()}>Choose avatar</Button>
-                            </div>
-                            <div className="col-12">
-                                {file && (<Button type="danger" size="small" block onClick={removeImage}>Remove image</Button>)}
-                            </div>
-                        </div>
+                        {!getFieldValue('name') && (
+                            <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>user name</b> to activate image/s upload</div>
+                        )}
+                        {getFieldValue('name') && (
+                            <GalleryContent
+                                folder="users" listType="picture-card" multiple={false} showUploadList={false} uploadSuccess={uploadSuccess}
+                                uploadData={{ name: getFieldValue('name'), resizes: '800,800' }}
+                            />
+                        )}
+                        <div className="clearfix" />
+                        <GalleryImageCard imgLink={images.link} img={images.name} onRemove={e => removeImage(e)} folder="users" />
                     </div>
                     <div className="col-12 col-lg-9">
                         <div className="row row-xs">
@@ -143,7 +117,7 @@ const UsersFormScreen = props => {
                                         rules: [{ required: true, message: <span /> }, { type: 'email' }],
                                         initialValue: row.email
                                     })(
-                                        <Input autoComplete="off" size="large" autoFocus disabled={submitting} />
+                                        <Input autoComplete="off" size="large" disabled={submitting} />
                                     )}
                                 </Form.Item>
                             </div>
@@ -153,7 +127,7 @@ const UsersFormScreen = props => {
                                         rules: [{ required: true, message: <span /> }],
                                         initialValue: row.phone && row.phone.split('+233')[1]
                                     })(
-                                        <Input addonBefore="+233" placeholder="26XXXXXXX" maxLength={9} autoComplete="off" size="large" autoFocus disabled={submitting} />
+                                        <Input addonBefore="+233" placeholder="26XXXXXXX" maxLength={10} autoComplete="off" size="large" disabled={submitting} />
                                     )}
                                 </Form.Item>
                             </div>

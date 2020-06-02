@@ -124,11 +124,11 @@ class Categories extends Component {
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    {row.status !== 2 && func.hasR('usr_acc_upd') && (
+                                                    {row.uuid !== 'super' && (row.status !== 2 && func.hasR('usr_acc_upd')) && (
                                                         <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
                                                     )}
                                                     {' '}
-                                                    {func.hasR('usr_acc_del') && (
+                                                    {row.uuid !== 'super' && func.hasR('usr_acc_del') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
                                                             <Button type="danger" size="small" loading={submitting}>Delete</Button>
                                                         </Popconfirm>

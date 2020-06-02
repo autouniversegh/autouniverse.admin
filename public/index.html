@@ -23,6 +23,19 @@
 <body class="">
   <noscript>You need to enable JavaScript to this app.</noscript>
   <div id="root"></div>
+
+  <script>
+    Object.defineProperty(Array.prototype, 'chunk', {
+        value: function (chunkSize) {
+          var array = this;
+          return [].concat.apply([],
+            array.map(function (elem, i) {
+              return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
+            })
+          );
+        }
+      });
+  </script>
 </body>
 
 </html>

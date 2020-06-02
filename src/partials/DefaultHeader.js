@@ -30,7 +30,7 @@ class DefaultHeader extends Component {
         <Nav className="ml-auto" navbar>
           <UncontrolledDropdown nav direction="down">
             <DropdownToggle nav style={{ marginRight: 20 }}>
-              <img src={'https://coreui.io/react/demo/assets/img/avatars/6.jpg'} className="img-avatar" alt="admin@bootstrapmaster.com" />
+              <img src={logg.avatar_link} className="img-avatar" alt={logg.name} />
               {logg.name}
             </DropdownToggle>
           </UncontrolledDropdown>
