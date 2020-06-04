@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, notification, Tabs } from 'antd';
+import { Button, Form, notification, Tabs } from 'antd';
 import * as func from '../../providers/functions';
 
 import SunEditor from 'suneditor-react';
@@ -45,6 +45,7 @@ class SetupDescriptionsScreen extends Component {
             { label: 'Mechanics', name: 'description_mechanics' },
             { label: 'Emergencies', name: 'description_emergencies' },
             { label: 'Expert Advice', name: 'description_expertadvices' },
+            { label: 'Other Services', name: 'description_otherservices' },
             { label: 'Maintainance Tracker', name: 'description_maintenance' }
         ];
 

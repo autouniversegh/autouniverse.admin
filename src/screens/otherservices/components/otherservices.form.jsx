@@ -62,7 +62,7 @@ const OtherServicesScreen = props => {
                 setSubmitting(true);
                 v['images'] = images.names;
                 v['location'] = location;
-                v['certifications'] = v.certifications.join(',');
+                v['certifications'] = v.certifications && v.certifications.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
                 func[method](`otherservices${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
                     setSubmitting(false);
