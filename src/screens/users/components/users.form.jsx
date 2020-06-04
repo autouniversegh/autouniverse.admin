@@ -5,7 +5,7 @@ import { GalleryImageCard, GalleryContent } from '../../../components';
 import * as func from '../../../providers/functions';
 
 const UsersFormScreen = props => {
-    const { row, form: { getFieldDecorator, validateFields, getFieldValue, setFieldsValue, resetFields }, visible, access } = props;
+    const { row, form: { getFieldDecorator, validateFields, getFieldValue, setFieldsValue, resetFields }, visible, access, type } = props;
 
     const [images, setImages] = useState({ name: '', link: '' });
     const [method, setMethod] = useState('');
@@ -15,7 +15,7 @@ const UsersFormScreen = props => {
 
     useEffect(() => {
         if (row.id) {
-            setModalTitle('Edit user');
+            setModalTitle(`${type === 'reset' ? 'Reset' : 'Edit'} user`);
             setMethod('put');
             setImages({
                 name: row.avatar ? row.avatar : '',
@@ -49,30 +49,47 @@ const UsersFormScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                v['avatar'] = images.name;
-                v['phone'] = `+233${v.phone.replace(/^0/, '')}`;
-                v['admin'] = row.admin;
-                func[method](`users${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
-                    setSubmitting(false);
-                    if (res.status === 200) {
-                        props.onOK(method, res.data);
-                        props.onCancel();
-                        resetFields();
-                        notification.success({ message: res.message });
-                    } else {
-                        if (res.status === 412) {
-                            setErrMessage(res.data.join('<br />'));
+                if(type === 'reset') {
+                    func.put(`users/${row.uuid}/resets`, v).then((res) => {
+                        setSubmitting(false);
+                        if (res.status === 200) {
+                            props.onOK(method, res.data);
+                            props.onCancel();
+                            resetFields();
+                            notification.success({ message: res.message });
                         } else {
-                            setErrMessage(res.message);
+                            if (res.status === 412) {
+                                setErrMessage(res.data.join('<br />'));
+                            } else {
+                                setErrMessage(res.message);
+                            }
                         }
-                    }
-                });
+                    });
+                }else{
+                    v['avatar'] = images.name;
+                    v['admin'] = row.admin;
+                    func[method](`users${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
+                        setSubmitting(false);
+                        if (res.status === 200) {
+                            props.onOK(method, res.data);
+                            props.onCancel();
+                            resetFields();
+                            notification.success({ message: res.message });
+                        } else {
+                            if (res.status === 412) {
+                                setErrMessage(res.data.join('<br />'));
+                            } else {
+                                setErrMessage(res.message);
+                            }
+                        }
+                    });
+                }                
             }
         });
     }
 
     return (
-        <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={1200} maskClosable={false}
+        <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={type === 'reset' ? 500 : 1200} maskClosable={false}
             footer={[
                 <Button key="back" type="danger" className="pull-left" disabled={submitting} onClick={() => props.onCancel()}>
                     Close
@@ -85,85 +102,99 @@ const UsersFormScreen = props => {
         >
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
-                <div className="row">
-                    <div className="col-12 col-lg-3">
-                        {!getFieldValue('name') && (
-                            <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>user name</b> to activate image/s upload</div>
-                        )}
-                        {getFieldValue('name') && (
-                            <GalleryContent
-                                folder="users" listType="picture-card" multiple={false} showUploadList={false} uploadSuccess={uploadSuccess}
-                                uploadData={{ name: getFieldValue('name'), resizes: '800,800' }}
-                            />
-                        )}
-                        <div className="clearfix" />
-                        <GalleryImageCard imgLink={images.link} img={images.name} onRemove={e => removeImage(e)} folder="users" />
-                    </div>
-                    <div className="col-12 col-lg-9">
-                        <div className="row row-xs">
-                            <div className="col-12 col-lg-12">
-                                <Form.Item label="Name">
-                                    {getFieldDecorator('name', {
-                                        rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.name
-                                    })(
-                                        <Input autoComplete="off" size="large" autoFocus disabled={submitting} />
-                                    )}
-                                </Form.Item>
-                            </div>
-                            <div className="col-12 col-lg-6">
-                                <Form.Item label="Email">
-                                    {getFieldDecorator('email', {
-                                        rules: [{ required: true, message: <span /> }, { type: 'email' }],
-                                        initialValue: row.email
-                                    })(
-                                        <Input autoComplete="off" size="large" disabled={submitting} />
-                                    )}
-                                </Form.Item>
-                            </div>
-                            <div className="col-12 col-lg-6">
-                                <Form.Item label="Phone">
-                                    {getFieldDecorator('phone', {
-                                        rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.phone && row.phone.split('+233')[1]
-                                    })(
-                                        <Input addonBefore="+233" placeholder="26XXXXXXX" maxLength={10} autoComplete="off" size="large" disabled={submitting} />
-                                    )}
-                                </Form.Item>
-                            </div>
-                            {props.params.admin === 1 && (
-                                <div className="col-12 col-lg-6">
-                                    <Form.Item label="Access">
-                                        {getFieldDecorator('access', {
+
+                {type === '' && (
+                    <div className="row">
+
+                        <div className="col-12 col-lg-3">
+                            {!getFieldValue('name') && (
+                                <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>user name</b> to activate image/s upload</div>
+                            )}
+                            {getFieldValue('name') && (
+                                <GalleryContent
+                                    folder="users" listType="picture-card" multiple={false} showUploadList={false} uploadSuccess={uploadSuccess}
+                                    uploadData={{ name: getFieldValue('name'), resizes: '800,800' }}
+                                />
+                            )}
+                            <div className="clearfix" />
+                            <GalleryImageCard imgLink={images.link} img={images.name} onRemove={e => removeImage(e)} folder="users" />
+                        </div>
+                        <div className="col-12 col-lg-9">
+                            <div className="row row-xs">
+                                <div className="col-12 col-lg-12">
+                                    <Form.Item label="Name">
+                                        {getFieldDecorator('name', {
                                             rules: [{ required: true, message: <span /> }],
-                                            initialValue: row.id && row.access.uuid
+                                            initialValue: row.name
                                         })(
-                                            <Select showSearch autoComplete="off" size="large" disabled={submitting}>
-                                                {access.map(ctg => (
-                                                    <Select.Option value={ctg.uuid} key={ctg.uuid}>{ctg.name}</Select.Option>
-                                                ))}
+                                            <Input autoComplete="off" size="large" autoFocus disabled={submitting} />
+                                        )}
+                                    </Form.Item>
+                                </div>
+                                <div className="col-12 col-lg-6">
+                                    <Form.Item label="Email">
+                                        {getFieldDecorator('email', {
+                                            rules: [{ required: true, message: <span /> }, { type: 'email' }],
+                                            initialValue: row.email
+                                        })(
+                                            <Input autoComplete="off" size="large" disabled={submitting} />
+                                        )}
+                                    </Form.Item>
+                                </div>
+                                <div className="col-12 col-lg-6">
+                                    <Form.Item label="Phone">
+                                        {getFieldDecorator('phone', {
+                                            rules: [{ required: true, message: <span /> }],
+                                            initialValue: row.phone
+                                        })(
+                                            <Input placeholder="26XXXXXXX" maxLength={10} autoComplete="off" size="large" disabled={submitting} />
+                                        )}
+                                    </Form.Item>
+                                </div>
+                                {props.params.admin === 1 && (
+                                    <div className="col-12 col-lg-6">
+                                        <Form.Item label="Access">
+                                            {getFieldDecorator('access', {
+                                                rules: [{ required: true, message: <span /> }],
+                                                initialValue: row.id && row.access.uuid
+                                            })(
+                                                <Select showSearch autoComplete="off" size="large" disabled={submitting}>
+                                                    {access.map(ctg => (
+                                                        <Select.Option value={ctg.uuid} key={ctg.uuid}>{ctg.name}</Select.Option>
+                                                    ))}
+                                                </Select>
+                                            )}
+                                        </Form.Item>
+                                    </div>
+                                )}
+
+                                <div className="col-12 col-lg-6">
+                                    <Form.Item label="Status">
+                                        {getFieldDecorator('status', {
+                                            rules: [{ required: true, message: <span /> }],
+                                            initialValue: row.id ? row.status : 1
+                                        })(
+                                            <Select optionFilterProp="children" size="large" disabled={submitting}>
+                                                <Select.Option value={1}>Active</Select.Option>
+                                                <Select.Option value={0}>Not active</Select.Option>
                                             </Select>
                                         )}
                                     </Form.Item>
                                 </div>
-                            )}
-
-                            <div className="col-12 col-lg-6">
-                                <Form.Item label="Status">
-                                    {getFieldDecorator('status', {
-                                        rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.id ? row.status : 1
-                                    })(
-                                        <Select optionFilterProp="children" size="large" disabled={submitting}>
-                                            <Select.Option value={1}>Active</Select.Option>
-                                            <Select.Option value={0}>Not active</Select.Option>
-                                        </Select>
-                                    )}
-                                </Form.Item>
                             </div>
                         </div>
                     </div>
-                </div>
+                )}
+
+                {type === 'reset' && (
+                    <Form.Item label="New password">
+                        {getFieldDecorator('newPassword', {
+                            rules: [{ required: true, message: <span /> }]
+                        })(
+                            <Input autoComplete="off" size="large" disabled={submitting} />
+                        )}
+                    </Form.Item>
+                )}
             </Form>
         </Modal>
     );

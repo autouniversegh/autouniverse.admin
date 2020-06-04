@@ -68,7 +68,7 @@ const DealersUploadScreen = props => {
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="alert alert-info pd-5 text-center">
-                    <a href={`${window.location.host}/assets/sample.${module}.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
+                    <a href={`${window.location.origin}/assets/sample.${module}.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
                 </div>
 
                 <Input id="file" className="form-controls" type="file" onChange={formChange} />

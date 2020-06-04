@@ -12,7 +12,7 @@ const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 
 class UsersList extends Component {
 
     state = {
-        loading: false, formModal: false,
+        loading: false, formModal: false, formType: '',
         data: [], access: [], row: {}, pathname: 'XXL', edited: 0, manipulate: 0,
         istatus: '%', iname: '', iaccess: '%',
         step: 0, currentStep: 1, total: 0
@@ -121,7 +121,7 @@ class UsersList extends Component {
                                     </div>
                                     <div className="col-3 text-right">
                                         {func.hasR('usr_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true, formType: '' })}><i className="icon-plus"></i> &nbsp; Add new</Button>
                                         )}
                                     </div>
                                 </div>
@@ -163,13 +163,17 @@ class UsersList extends Component {
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
                                                     {row.status !== 2 && func.hasR('usr_upd') && (
-                                                        <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
+                                                        <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: '' })}>Edit</Button>
                                                     )}
                                                     {' '}
-                                                    {func.hasR('usr_del') && (
-                                                        <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
-                                                            <Button type="danger" size="small" loading={submitting}>Delete</Button>
+                                                    {/* {func.hasR('usr_sus') && (
+                                                        <Popconfirm title="Are you sure?" okText="Yes, Suspend" okButtonProps={{ type: 'warning', size: 'small' }} onConfirm={() => this.delete(row)}>
+                                                            <Button type="warning" size="small" loading={submitting}>Suspend</Button>
                                                         </Popconfirm>
+                                                    )} */}
+                                                    {' '}
+                                                    {func.hasR('usr_res') && (
+                                                        <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: 'reset' })}>Reset</Button>
                                                     )}
                                                 </td>
                                             </tr>
@@ -187,6 +191,7 @@ class UsersList extends Component {
                     <UsersForm
                         {...this.props}
                         row={this.state.row}
+                        type={this.state.formType}
                         visible={this.state.formModal}
                         access={this.state.access}
                         onCancel={() => this.setState({ row: {}, formModal: false })}
