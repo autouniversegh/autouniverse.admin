@@ -1,25 +1,45 @@
 import React, { Component } from 'react';
-import { Button, Form, Select, Pagination } from 'antd';
-import { FormattedNumber } from 'react-intl';
+import moment from 'moment';
+import { Button, Form, Pagination, DatePicker } from 'antd';
 import { CSVLink } from 'react-csv';
 import * as func from '../../providers/functions';
 
 const limit = 25;
-class ReportsViews extends Component {
+class ReportsSubscriptions extends Component {
 
     state = {
         loading: false, formModal: false,
         data: [], csvData: [], row: {},
-        pathname: '', itype: 'dealers',
-        step: 0, currentStep: 1, total: 0
+        pathname: '', itype: 'subscriptions',
+        step: 0, currentStep: 1, total: 0,
+        between: [moment(), moment()]
     }
 
     componentDidMount() {
         this.setPage();
+
+        func.get('subscriptions', { orderby: 'crdate_desc', status: 1 }).then(res => {
+            this.setState({ loading: false });
+            if (res.status === 200) {
+                this.setState({
+                    csvData: res.data.map(row => {
+                        return {
+                            'ID': row.uuid,
+                            'User': row.user.name,
+                            'Package Title': row.package.title,
+                            'Package Amount': 'Ghs ' + row.package.amount,
+                            'Package Duration': row.package.duration + ' months',
+                            'Purchase Date': moment(row.crdate).format('LLL'),
+                            'Expiry Date': moment(row.exdate).format('LLL')
+                        }
+                    })
+                });
+            }
+        });
     }
 
     setPage() {
-        this.props.setPageTitle('Reports: Views');
+        this.props.setPageTitle('Reports: Subscriptions');
         this.getData();
     }
 
@@ -30,26 +50,13 @@ class ReportsViews extends Component {
     }
     getData = () => {
         this.setState({ loading: true, total: 0 });
-        const { step, itype } = this.state;
-        func.get(itype, { orderby: 'views_desc', limit: `${step},${limit}` }).then(res => {
+        const { step, between } = this.state;
+        func.get('subscriptions', { orderby: 'crdate_desc', between: `crdate_${moment(between[0]).format('YYYY-MM-DD')}_${moment(between[1]).format('YYYY-MM-DD')}`,  limit: `${step},${limit}` }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
             } else {
                 this.setState({ data: [] });
-            }
-        });
-
-        func.get(itype, { orderby: 'views_desc' }).then(res => {
-            this.setState({ loading: false });
-            if (res.status === 200) {
-                this.setState({
-                    csvData: res.data.map(row => {
-                        return {
-                            provider: row.name, views: row.views
-                        }
-                    })
-                });
             }
         });
     }
@@ -78,17 +85,16 @@ class ReportsViews extends Component {
                         <div className="jumbotron">
                             <Form hideRequiredMark={false}>
                                 <div className="row row-xs">
-                                    <div className="col-2">
-                                        <Select showSearch={true} placeholder="Type" value={itype} disabled={loading} onChange={e => this.formChange(e, 'itype')}>
-                                            <Select.Option value="dealers">Autopart dealers</Select.Option>
-                                            <Select.Option value="mechanics">Mechanics</Select.Option>
-                                            <Select.Option value="emergencies">Emergencies</Select.Option>
-                                            <Select.Option value="otherservices">Other services</Select.Option>
-                                        </Select>
+                                    <div className="col-4">
+                                        <DatePicker.RangePicker size="large" value={this.state.between} onChange={between => {
+                                            this.setState({ between }, () => {
+                                                this.getData();
+                                            });
+                                        }} />
                                     </div>
-                                    <div className="col-10 text-right">
-                                        <Button type="primary" size="small" loading={loading}>
-                                            <CSVLink data={csvData} filename={`${itype}-views-${func.dates.td}.csv`} target="_blank">
+                                    <div className="col-8 text-right">
+                                        <Button type="dark" size="small" loading={loading}>
+                                            <CSVLink data={csvData} filename={`${itype}-${func.dates.td}.csv`} target="_blank">
                                                 Download Report
                                             </CSVLink>
                                         </Button>
@@ -101,8 +107,10 @@ class ReportsViews extends Component {
                                 <thead>
                                     <tr>
                                         <th>#</th>
-                                        <th>Provider</th>
-                                        <th>Views</th>
+                                        <th>User</th>
+                                        <th>Package</th>
+                                        <th>Purchase date</th>
+                                        <th>Expirty date</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -113,8 +121,14 @@ class ReportsViews extends Component {
                                         data.map((row) => (
                                             <tr key={row.uuid}>
                                                 <td>{i++}</td>
-                                                <td>{row.name}</td>
-                                                <td><FormattedNumber value={row.views} /></td>
+                                                <td>{row.user.name}</td>
+                                                <td>
+                                                    <b>Title</b>: {row.package.title} <br />
+                                                    <b>Amount</b>: Ghs{row.package.amount} <br />
+                                                    <b>Duration</b>: {row.package.duration}
+                                                </td>
+                                                <td>{moment(row.crdate).format('LLL')}</td>
+                                                <td>{moment(row.exdate).format('LLL')}</td>
                                             </tr>
                                         ))
                                     )}
@@ -131,4 +145,4 @@ class ReportsViews extends Component {
     }
 }
 
-export default ReportsViews;
+export default ReportsSubscriptions;

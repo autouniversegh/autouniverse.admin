@@ -5,7 +5,7 @@ import { CSVLink } from 'react-csv';
 import * as func from '../../providers/functions';
 
 const limit = 25;
-class ReportsViews extends Component {
+class ReportsReviews extends Component {
 
     state = {
         loading: false, formModal: false,
@@ -19,7 +19,7 @@ class ReportsViews extends Component {
     }
 
     setPage() {
-        this.props.setPageTitle('Reports: Views');
+        this.props.setPageTitle('Reports: Reviews');
         this.getData();
     }
 
@@ -31,7 +31,7 @@ class ReportsViews extends Component {
     getData = () => {
         this.setState({ loading: true, total: 0 });
         const { step, itype } = this.state;
-        func.get(itype, { orderby: 'views_desc', limit: `${step},${limit}` }).then(res => {
+        func.get(itype, { orderby: 'reviews_desc', limit: `${step},${limit}` }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
@@ -40,13 +40,13 @@ class ReportsViews extends Component {
             }
         });
 
-        func.get(itype, { orderby: 'views_desc' }).then(res => {
+        func.get(itype, { orderby: 'reviews_desc' }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({
                     csvData: res.data.map(row => {
                         return {
-                            provider: row.name, views: row.views
+                            provider: row.name, reviews: row.reviews
                         }
                     })
                 });
@@ -88,7 +88,7 @@ class ReportsViews extends Component {
                                     </div>
                                     <div className="col-10 text-right">
                                         <Button type="primary" size="small" loading={loading}>
-                                            <CSVLink data={csvData} filename={`${itype}-views-${func.dates.td}.csv`} target="_blank">
+                                            <CSVLink data={csvData} filename={`${itype}-reviews-${func.dates.td}.csv`} target="_blank">
                                                 Download Report
                                             </CSVLink>
                                         </Button>
@@ -102,7 +102,7 @@ class ReportsViews extends Component {
                                     <tr>
                                         <th>#</th>
                                         <th>Provider</th>
-                                        <th>Views</th>
+                                        <th>Reviews</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -114,7 +114,7 @@ class ReportsViews extends Component {
                                             <tr key={row.uuid}>
                                                 <td>{i++}</td>
                                                 <td>{row.name}</td>
-                                                <td><FormattedNumber value={row.views} /></td>
+                                                <td><FormattedNumber value={row.reviews} /></td>
                                             </tr>
                                         ))
                                     )}
@@ -131,4 +131,4 @@ class ReportsViews extends Component {
     }
 }
 
-export default ReportsViews;
+export default ReportsReviews;

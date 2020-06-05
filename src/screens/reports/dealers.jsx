@@ -94,7 +94,7 @@ class ReportsDealers extends Component {
                                     </div>
                                     <div className="col-10 text-right">
                                         <Button type="dark" size="small" loading={loading}>
-                                            <CSVLink data={csvData} filename={`${itype}.csv`} target="_blank">
+                                            <CSVLink data={csvData} filename={`${itype}-${func.dates.td}.csv`} target="_blank">
                                                 Download Report
                                             </CSVLink>
                                         </Button>

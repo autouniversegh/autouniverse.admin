@@ -38,7 +38,8 @@ export const app = {
 }
 
 export const dates = {
-    yr: moment().format('YYYY')
+    yr: moment().format('YYYY'),
+    td: moment().format('YYYY-MM-DD')
 }
 
 

@@ -61,7 +61,7 @@ const initialState = {
                 name: 'Reports', url: '/reports', icon: 'icon-chart', code: 'rep',
                 children: [
                     { name: 'Subscriptions', url: '/reports/subscriptions', code: 'rep_subs' },
-                    { name: 'Rating', url: '/reports/rating', code: 'rep_rating' },
+                    { name: 'Reviews', url: '/reports/reviews', code: 'rep_rev' },
                     { name: 'Auto parts dealers', url: '/reports/dealers', code: 'rep_del' },
                     { name: 'Join date', url: '/reports/joindate', code: 'rep_join' },
                     { name: 'Views', url: '/reports/views', code: 'rep_views' },
