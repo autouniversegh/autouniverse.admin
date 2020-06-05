@@ -259,8 +259,8 @@ export const locationOptions = (locations) => {
 
 export const hasR = (role) => {
     let user = getStorageJson('user');
-    let myRoles = ((user.role || {}).data || '').split(',');
-    myRoles = ['*'];
+    let myRoles = ((user.access || {}).access || '').split(',');
+    // myRoles = ['mec', 'aut', 'delss'];
     return (myRoles.includes(role) || myRoles.includes('*'));
 };
 

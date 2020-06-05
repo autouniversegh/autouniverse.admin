@@ -6,7 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import { history } from "./store/_store";
 import { Container } from 'reactstrap';
 
-// import * as func from './providers/functions';
+import * as func from './providers/functions';
 import * as authAct from "./store/auth/_authActions";
 import * as utilsAct from "./store/utils/_utilsActions";
 import { Fallback } from './components';
@@ -73,6 +73,26 @@ class Main extends Component {
     render() {
         const { _utils: { navigation } } = this.props;
 
+        let items = [], novigation = {};
+        // eslint-disable-next-line array-callback-return
+        navigation.items.filter(row => {
+            var childs = [], rows = {};
+            if (func.hasR(row.code) || !row.code) {
+                if (row.children) {
+                    // eslint-disable-next-line array-callback-return
+                    row.children.filter(ruw => {
+                        if (func.hasR(ruw.code)) {
+                            childs.push(ruw);
+                        }
+                    });
+                }
+                row['children'] = childs.length && childs;
+                rows = row;
+                items.push(rows)
+            }
+        });
+        novigation['items'] = items;
+
         return (
             <React.Fragment>
                 <ConnectedRouter history={history}>
@@ -84,7 +104,7 @@ class Main extends Component {
                             <AppSidebar fixed display="lg">
                                 <AppSidebarHeader />
                                 <AppSidebarForm />
-                                <AppSidebarNav navConfig={navigation} {...this.props} router={router} />
+                                <AppSidebarNav navConfig={novigation} {...this.props} router={router} />
                                 <AppSidebarFooter />
                                 <AppSidebarMinimizer />
                             </AppSidebar>

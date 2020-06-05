@@ -16,10 +16,10 @@ const initialState = {
                 name: 'Dashboard', url: '/dashboard', icon: 'icon-speedometer', code: ''
             },
             {
-                name: 'Auto Parts', url: '/autoparts', icon: 'icon-wrench', code: 'itm',
+                name: 'Auto Parts', url: '/autoparts', icon: 'icon-wrench', code: 'aut',
                 children: [
                     { name: 'Manage Dealers', url: '/autoparts/dealers', code: 'del' },
-                    { name: 'Manage AutoParts', url: '/autoparts/autoparts', code: 'itm' },
+                    { name: 'Manage AutoParts', url: '/autoparts/autoparts', code: 'aut' },
                 ]
             },
             {
@@ -36,10 +36,10 @@ const initialState = {
                 ]
             },
             {
-                name: 'Other Services', url: '/otherservices', icon: 'icon-cursor', code: 'aut',
+                name: 'Other Services', url: '/otherservices', icon: 'icon-cursor', code: 'oth',
                 children: [
-                    { name: 'Other Services', url: '/otherservices', code: 'aut' },
-                    { name: 'Manage Categories', url: '/otherservices/categories', code: 'aut_ctg' },
+                    { name: 'Other Services', url: '/otherservices', code: 'oth' },
+                    { name: 'Manage Categories', url: '/otherservices/categories', code: 'oth_ctg' },
                 ]
             },
             {

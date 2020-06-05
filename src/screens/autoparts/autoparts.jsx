@@ -95,11 +95,11 @@ class Autoparts extends Component {
                                         <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-5 text-right">
-                                        {/* {func.hasR('itm_up') && (
+                                        {/* {func.hasR('aut_up') && (
                                             <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-cloud-upload"></i> &nbsp; Upload auto</Button>
                                         )}
                                         {' '} */}
-                                        {func.hasR('itm_add') && (
+                                        {func.hasR('aut_add') && (
                                             <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
                                         )}
                                     </div>
@@ -142,11 +142,11 @@ class Autoparts extends Component {
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    {row.status !== 2 && func.hasR('itm_upd') && (
+                                                    {row.status !== 2 && func.hasR('aut_upd') && (
                                                         <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
                                                     )}
                                                     {' '}
-                                                    {func.hasR('itm_del') && (
+                                                    {func.hasR('aut_del') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
                                                             <Button type="danger" size="small" loading={submitting}>Delete</Button>
                                                         </Popconfirm>
