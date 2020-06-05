@@ -31,7 +31,7 @@ class Dashboard extends Component {
 
         return (
             <div className="animated fadeIn">
-                dfbbncgh hg y v jv 
+                
             </div>
         );
     }

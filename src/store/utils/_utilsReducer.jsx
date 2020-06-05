@@ -43,7 +43,10 @@ const initialState = {
                 ]
             },
             {
-                name: 'Expert Advice', url: '/expertadvices', icon: 'icon-speedometer', code: 'adv',
+                name: 'Orders', url: '/orders', icon: 'icon-basket', code: 'ord'
+            },
+            {
+                name: 'Expert Advice', url: '/expertadvices', icon: 'icon-book-open', code: 'adv',
                 children: [
                     { name: 'Expert advice', url: '/expertadvices', code: 'adv' },
                     { name: 'Manage Categories', url: '/expertadvices/categories', code: 'adv_ctg' }

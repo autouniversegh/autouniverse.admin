@@ -121,7 +121,7 @@ class UsersList extends Component {
                                     </div>
                                     <div className="col-3 text-right">
                                         {func.hasR('usr_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true, formType: '' })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                            <Button type="dark" size="small" onClick={() => this.setState({ row: { admin: this.props.params.admin }, formModal: true, formType: '' })}><i className="icon-plus"></i> &nbsp; Add new</Button>
                                         )}
                                     </div>
                                 </div>
