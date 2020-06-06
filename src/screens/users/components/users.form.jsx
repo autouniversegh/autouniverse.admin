@@ -49,7 +49,7 @@ const UsersFormScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                if(type === 'reset') {
+                if (type === 'reset') {
                     func.put(`users/${row.uuid}/resets`, v).then((res) => {
                         setSubmitting(false);
                         if (res.status === 200) {
@@ -65,7 +65,7 @@ const UsersFormScreen = props => {
                             }
                         }
                     });
-                }else{
+                } else {
                     v['avatar'] = images.name;
                     v['admin'] = row.admin;
                     func[method](`users${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
@@ -83,7 +83,7 @@ const UsersFormScreen = props => {
                             }
                         }
                     });
-                }                
+                }
             }
         });
     }
@@ -147,7 +147,7 @@ const UsersFormScreen = props => {
                                             rules: [{ required: true, message: <span /> }],
                                             initialValue: row.phone
                                         })(
-                                            <Input placeholder="26XXXXXXX" maxLength={10} autoComplete="off" size="large" disabled={submitting} />
+                                            <Input placeholder="026XXXXXXX" maxLength={10} autoComplete="off" size="large" disabled={submitting} />
                                         )}
                                     </Form.Item>
                                 </div>
@@ -167,7 +167,17 @@ const UsersFormScreen = props => {
                                         </Form.Item>
                                     </div>
                                 )}
-
+                                {!row.id && (
+                                    <div className="col-12 col-lg-6">
+                                        <Form.Item label="Password">
+                                            {getFieldDecorator('password', {
+                                                rules: [{ required: true, message: <span /> }]
+                                            })(
+                                                <Input autoComplete="off" size="large" disabled={submitting} />
+                                            )}
+                                        </Form.Item>
+                                    </div>
+                                )}
                                 <div className="col-12 col-lg-6">
                                     <Form.Item label="Status">
                                         {getFieldDecorator('status', {
