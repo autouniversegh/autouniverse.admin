@@ -62,6 +62,8 @@ const MechanicFormScreen = props => {
                 setSubmitting(true);
                 v['images'] = images.names;
                 v['location'] = location;
+                v['makes'] = v.makes.join(',');
+                v['parts'] = v.parts.join(',');
                 v['certifications'] = v.certifications && v.certifications.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
                 func[method](`mechanics${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
@@ -143,11 +145,31 @@ const MechanicFormScreen = props => {
                                     )}
                                 </Form.Item>
                             </div>
+                            <div className="col-12 col-lg-12">
+                                <Form.Item label="Car makes" help="Separate each value with a comma (,)">
+                                    {getFieldDecorator('makes', {
+                                        rules: [{ required: true, message: <span /> }],
+                                        initialValue: row.id && row.makes && row.makes.split(',')
+                                    })(
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
+                                    )}
+                                </Form.Item>
+                            </div>
+                            <div className="col-12 col-lg-12">
+                                <Form.Item label="Parts" help="Separate each value with a comma (,)">
+                                    {getFieldDecorator('parts', {
+                                        rules: [{ required: true, message: <span /> }],
+                                        initialValue: row.id && row.parts && row.parts.split(',')
+                                    })(
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
+                                    )}
+                                </Form.Item>
+                            </div>
                             <div className="col-12 col-lg-6">
                                 <Form.Item label="Certificatons" help="Separate each value with a comma (,)">
                                     {getFieldDecorator('certifications', {
                                         // rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.id && (row.certifications.split(',') || [])
+                                        initialValue: row.id && row.certifications && (row.certifications.split(',') || [])
                                     })(
                                         <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
                                     )}
