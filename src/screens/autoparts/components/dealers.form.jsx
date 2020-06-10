@@ -62,6 +62,8 @@ const DealersFormScreen = props => {
                 setSubmitting(true);
                 v['images'] = images.names;
                 v['location'] = location;
+                v['makes'] = v.makes.join(',');
+                v['parts'] = v.parts.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
                 func[method](`dealers${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
                     setSubmitting(false);
@@ -141,6 +143,26 @@ const DealersFormScreen = props => {
                                             <Select.Option value={1}>Yes</Select.Option>
                                             <Select.Option value={0}>No</Select.Option>
                                         </Select>
+                                    )}
+                                </Form.Item>
+                            </div>
+                            <div className="col-12 col-lg-12">
+                                <Form.Item label="Car makes" help="Separate each value with a comma (,)">
+                                    {getFieldDecorator('makes', {
+                                        rules: [{ required: true, message: <span /> }],
+                                        initialValue: row.id && row.makes && row.makes.split(',')
+                                    })(
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
+                                    )}
+                                </Form.Item>
+                            </div>
+                            <div className="col-12 col-lg-12">
+                                <Form.Item label="Parts" help="Separate each value with a comma (,)">
+                                    {getFieldDecorator('parts', {
+                                        rules: [{ required: true, message: <span /> }],
+                                        initialValue: row.id && row.parts && row.parts.split(',')
+                                    })(
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
                                     )}
                                 </Form.Item>
                             </div>

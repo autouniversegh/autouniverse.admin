@@ -16,7 +16,10 @@ class DefaultFooter extends Component {
     return (
       <React.Fragment>
         <span>&copy; 2020 AutoUniverse.</span>
-        <span className="ml-auto">Powered by <a href="https://anchoratechs.com" target="_blank" rel="noopener noreferrer">Anchora Technologies</a></span>
+        <span className="ml-auto">
+          Powered by <a href="https://buvalon.com" target="_blank" rel="noopener noreferrer">Buvalon Ltd</a> &nbsp; &sdot; &nbsp;
+          Developed &amp; Maintained by <a href="https://anchoratechs.com" target="_blank" rel="noopener noreferrer">Anchora Technologies</a>
+        </span>
       </React.Fragment>
     );
   }

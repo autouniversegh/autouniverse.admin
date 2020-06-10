@@ -140,6 +140,8 @@ class Dealers extends Component {
                                                 <td>
                                                     Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
                                                     Delivery: {row.delivery ? 'YES' : 'NO'} <br />
+                                                    Car makes: {row.makes} <br />
+                                                    Parts: {row.parts} <br />
                                                     Parts imported from: {row.parts_source}
                                                 </td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
