@@ -12,7 +12,7 @@ class ReportsOrders extends Component {
         data: [], csvData: [], row: {},
         pathname: '', itype: 'orders',
         step: 0, currentStep: 1, total: 0,
-        between: [moment(), moment()]
+        between: [moment().startOf('month'), moment()]
     }
 
     componentDidMount() {
@@ -32,7 +32,7 @@ class ReportsOrders extends Component {
     getData = () => {
         this.setState({ loading: true, total: 0 });
         const { step, itype, between } = this.state;
-        func.get(itype, { orderby: 'crdate_desc', between: `crdate_${moment(between[0]).format('YYYY-MM-DD')}_${moment(between[1]).format('YYYY-MM-DD')}`, limit: `${step},${limit}` }).then(res => {
+        func.get(itype, { orderby: 'crdate_asc', between: `crdate_${moment(between[0]).format('YYYY-MM-DD')}_${moment(between[1]).format('YYYY-MM-DD')}`, limit: `${step},${limit}` }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
@@ -79,14 +79,14 @@ class ReportsOrders extends Component {
                         <div className="jumbotron">
                             <Form hideRequiredMark={false}>
                                 <div className="row row-xs">
-                                    <div className="col-4">
-                                        <DatePicker.RangePicker size="large" value={this.state.between} onChange={between => {
+                                    <div className="col-5">
+                                        <DatePicker.RangePicker size="large" format="LL" value={this.state.between} onChange={between => {
                                             this.setState({ between }, () => {
                                                 this.getData();
                                             });
                                         }} />
                                     </div>
-                                    <div className="col-8 text-right">
+                                    <div className="col-7 text-right">
                                         {/* <Button type="primary" size="small" loading={loading}>
                                             <CSVLink data={csvData} filename={`${itype}-orders-${func.dates.td}.csv`} target="_blank">
                                                 Download Report
