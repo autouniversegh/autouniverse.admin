@@ -4,6 +4,7 @@ import * as func from '../../providers/functions';
 import moment from 'moment';
 
 import AutopartForm from './components/autoparts.form';
+import { MassUpload } from '../../components';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';
@@ -12,7 +13,7 @@ const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 
 class Autoparts extends Component {
 
     state = {
-        loading: false, formModal: false,
+        loading: false, formModal: false, uploadModal: false,
         data: [], row: {}, pathname: '', edited: 0, manipulate: 0,
         istatus: '%', iname: '',
         step: 0, currentStep: 1, total: 0
@@ -95,12 +96,15 @@ class Autoparts extends Component {
                                         <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
                                     <div className="col-5 text-right">
-                                        {/* {func.hasR('aut_up') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-cloud-upload"></i> &nbsp; Upload auto</Button>
-                                        )}
-                                        {' '} */}
                                         {func.hasR('aut_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, formModal: true })}>
+                                                <i className="icon-plus"></i> &nbsp; Add new
+                                            </Button>
+                                        )}
+                                        {func.hasR('aut_up') && (
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, uploadModal: true })}>
+                                                <i className="icon-cloud-upload"></i> &nbsp; Mass upload
+                                            </Button>
                                         )}
                                     </div>
                                 </div>
@@ -182,6 +186,19 @@ class Autoparts extends Component {
                                     this.setState({ data, edited: e.uuid });
                                 }
                             }, 200);
+                        }}
+                    />
+                )}
+
+                {this.state.uploadModal === true && (
+                    <MassUpload
+                        {...this.props}
+                        module="autoparts"
+                        row={this.state.row}
+                        visible={this.state.uploadModal}
+                        onCancel={() => this.setState({ row: {}, uploadModal: false })}
+                        onOK={(a, e) => {
+                            this.getData();
                         }}
                     />
                 )}

@@ -53,8 +53,28 @@ const DealersUploadScreen = props => {
         });
     }
 
+    const instructions = {
+        dealers: [
+            '<b>CONTACT-NUMBERS</b>: Comma separated values', '<b>DELIVERY</b>: Yes/No', '<b>MAKES</b>: Comma separated values',
+            '<b>PARTS</b>: Comma separated values', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
+        ],
+        mechanics: [
+            '<b>CONTACT-NUMBERS</b>: Comma separated values', '<b>INSURED</b>: Yes/No', '<b>CERTIFICATIONS</b>: Comma separated values', '<b>TYPES</b>: Comma separated values',
+            '<b>MAKES</b>: Comma separated values', '<b>PARTS</b>: Comma separated values', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
+        ],
+        emergencies: [
+            '<b>CATEGORY</b>: Must be the ID of the categories extracted',
+            '<b>CONTACT-NUMBERS</b>: Comma separated values', '<b>INSURED</b>: Yes/No', '<b>CERTIFICATIONS</b>: Comma separated values',
+            '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
+        ],
+        autoparts: [
+            '<b>DEALER</b>: Must be the ID of the dealers extracted',
+            '<b>MAKE</b>: Must be the same from the original excel', '<b>MODEL</b>: Must be the model attached to the make', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
+        ]
+    };
+
     return (
-        <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={600} maskClosable={false}
+        <Modal visible={visible} title={modalTitle} onCancel={() => props.onCancel()} destroyOnClose={true} width={1200} maskClosable={false}
             footer={[
                 <Button key="back" type="danger" className="pull-left" disabled={submitting} onClick={() => props.onCancel()}>
                     Close
@@ -65,14 +85,27 @@ const DealersUploadScreen = props => {
             ]}
             style={{ top: 20 }} className={`${errMessage ? 'animated shake' : ''}`}
         >
-            <Form hideRequiredMark={false}>
-                {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
-                <div className="alert alert-info pd-5 text-center">
-                    <a href={`${window.location.origin}/assets/sample.${module}.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
+            <div className="row">
+                <div className="col-lg-8">
+                    <Form hideRequiredMark={false}>
+                        {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
+                        <div className="alert alert-info pd-5 text-center">
+                            <a href={`/assets/sample.${module}.csv`} target="_blank" rel="noopener noreferrer">Download sample template here</a>
+                        </div>
+                        <img className="img-thumbnail mg-b-15" src={`/assets/sample.${module}.png`} alt="" />
+                        <Input id="file" className="form-controls" type="file" onChange={formChange} />
+                    </Form>
                 </div>
-
-                <Input id="file" className="form-controls" type="file" onChange={formChange} />
-            </Form>
+                <div className="col-lg-4 mg-t-20s">
+                    <h4>Instructions</h4>
+                    <div className="bg-gray-100 pd-10">
+                        {(instructions[module] || []).map(instruction => (
+                            <div className="mg-b-5 small" dangerouslySetInnerHTML={{ __html: instruction }} />
+                        ))}
+                        <div className="text-centers text-danger">Must be a .csv file</div>
+                    </div>
+                </div>
+            </div>
         </Modal>
     );
 

@@ -6,7 +6,6 @@ import moment from 'moment';
 import UsersForm from './components/users.form';
 
 const limit = 12;
-const defaultImage = '/assets/noimage.jpg';
 const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Deleted']];
 
 class UsersList extends Component {
@@ -150,7 +149,7 @@ class UsersList extends Component {
                                         data.map((row) => (
                                             <tr key={row.uuid} className={edited === row.uuid ? 'animated shake bg-gray-100' : ''}>
                                                 <td>{i++}</td>
-                                                <td><img className="img-thumbnail img-circle" width="50px" src={row.avatar ? row.avatar_link : defaultImage} alt={row.name} /></td>
+                                                <td><img className="img-thumbnail img-circle" width="50px" src={row.avatar_link} alt={row.name} /></td>
                                                 <td>{row.name}</td>
                                                 <td>
                                                     Email: {row.email} <br />
