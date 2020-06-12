@@ -5,6 +5,7 @@ import { CSVLink } from 'react-csv';
 import * as func from '../../providers/functions';
 
 const limit = 25;
+const rowStatus = [['danger', 'Expired'], ['success', 'Active']];
 class ReportsSubscriptions extends Component {
 
     state = {
@@ -109,6 +110,7 @@ class ReportsSubscriptions extends Component {
                                         <th>#</th>
                                         <th>User</th>
                                         <th>Package</th>
+                                        <th>Status</th>
                                         <th>Purchase date</th>
                                         <th>Expiry date</th>
                                     </tr>
@@ -127,6 +129,7 @@ class ReportsSubscriptions extends Component {
                                                     <b>Amount</b>: Ghs{row.package.amount} <br />
                                                     <b>Duration</b>: {row.package.duration}
                                                 </td>
+                                                <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td>{moment(row.exdate).format('LLL')}</td>
                                             </tr>

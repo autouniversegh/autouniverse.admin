@@ -87,9 +87,9 @@ class Gallery extends Component {
                             <div className="row">
                                 {data.map((row, i) => (
                                     <div className="card mg-10">
-                                        {/* <div className="card-header">
+                                        <div className="card-header">
                                             <small>{row.image}</small>
-                                        </div> */}
+                                        </div>
                                         <div
                                             className="card-body pd-0 pointer"
                                             onClick={() => this.setState({ isOpen: true, photoIndex: i })}
