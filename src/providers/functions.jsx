@@ -3,7 +3,7 @@ import moment from 'moment';
 import axios from 'axios';
 
 export const api = {
-    space: 'on',
+    space: 'qa',
 
     key_of: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt1TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu1',
     key_qa: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt4TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu4',
@@ -20,7 +20,7 @@ export const api = {
 
 export const initialize = () => {
     if (window.location.host.match(/localhost/i)) {
-        api.space = 'of';
+        // api.space = 'of';
     } else if (window.location.host.match(/qa-/i)) {
         api.space = 'qa';
     } else {

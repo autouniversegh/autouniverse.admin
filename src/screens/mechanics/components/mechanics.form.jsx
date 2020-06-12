@@ -64,6 +64,7 @@ const MechanicFormScreen = props => {
                 v['location'] = location;
                 v['makes'] = v.makes.join(',');
                 v['parts'] = v.parts.join(',');
+                v['types'] = v.types.join(',');
                 v['certifications'] = v.certifications && v.certifications.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
                 func[method](`mechanics${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
@@ -165,7 +166,17 @@ const MechanicFormScreen = props => {
                                     )}
                                 </Form.Item>
                             </div>
-                            <div className="col-12 col-lg-6">
+                            <div className="col-12 col-lg-12">
+                                <Form.Item label="Main types of Mechanical Works" help="Separate each value with a comma (,)">
+                                    {getFieldDecorator('types', {
+                                        rules: [{ required: true, message: <span /> }],
+                                        initialValue: row.id && row.types && (row.types.split(',') || [])
+                                    })(
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
+                                    )}
+                                </Form.Item>
+                            </div>
+                            <div className="col-12 col-lg-12">
                                 <Form.Item label="Certificatons" help="Separate each value with a comma (,)">
                                     {getFieldDecorator('certifications', {
                                         // rules: [{ required: true, message: <span /> }],
