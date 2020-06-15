@@ -63,7 +63,6 @@ const MechanicFormScreen = props => {
                 v['images'] = images.names;
                 v['location'] = location;
                 v['makes'] = v.makes.join(',');
-                v['parts'] = v.parts.join(',');
                 v['types'] = v.types.join(',');
                 v['certifications'] = v.certifications && v.certifications.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
@@ -151,16 +150,6 @@ const MechanicFormScreen = props => {
                                     {getFieldDecorator('makes', {
                                         rules: [{ required: true, message: <span /> }],
                                         initialValue: row.id && row.makes && row.makes.split(',')
-                                    })(
-                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
-                                    )}
-                                </Form.Item>
-                            </div>
-                            <div className="col-12 col-lg-12">
-                                <Form.Item label="Parts" help="Separate each value with a comma (,)">
-                                    {getFieldDecorator('parts', {
-                                        rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.id && row.parts && row.parts.split(',')
                                     })(
                                         <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
                                     )}

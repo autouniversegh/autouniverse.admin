@@ -4,6 +4,7 @@ import axios from 'axios';
 
 export const api = {
     space: 'qa',
+    headers: {},
 
     key_of: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt1TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu1',
     key_qa: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt4TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu4',
@@ -30,6 +31,13 @@ export const initialize = () => {
     api.apiKey = api[`key_${api.space}`];
     api.apiPlatform = api[`platform_${api.space}`];
     api.apiToken = getStorage('token');
+
+    api.headers = {
+        'Platform': `${api.apiPlatform}/${app.version}`,
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'buv-access-token': api.apiKey + '.' + api.apiToken
+    };
 }
 
 export const app = {
@@ -130,12 +138,7 @@ export const post = async (action, data = {}, empty = false) => {
     try {
         let response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Platform': `${api.apiPlatform}/${app.version}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'x-access-token': api.apiKey + '.' + api.apiToken
-            },
+            headers: api.headers,
             body: JSON.stringify(data)
         });
         let responseJson = await response.json();
@@ -148,12 +151,7 @@ export const get = async (action, data = {}, empty = false) => {
     let url = ((empty === false) ? api.apiURL + action : action);
     return axios({
         method: 'GET', url,
-        headers: {
-            'Platform': `${api.apiPlatform}/${app.version}`,
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'x-access-token': api.apiKey + '.' + api.apiToken
-        },
+        headers: api.headers,
         params: data
     }).then(response => {
         const res = response.data;
@@ -167,12 +165,7 @@ export const put = async (action, data = {}, empty = false) => {
     try {
         let response = await fetch(url, {
             method: 'PUT',
-            headers: {
-                'Platform': `${api.apiPlatform}/${app.version}`,
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'x-access-token': api.apiKey + '.' + api.apiToken
-            },
+            headers: api.headers,
             body: JSON.stringify(data)
         });
         let responseJson = await response.json();
@@ -185,11 +178,7 @@ export const delte = async (action) => {
     try {
         let response = await fetch(api.apiURL + action, {
             method: 'DELETE',
-            headers: {
-                'Platform': `${api.apiPlatform}/${app.version}`,
-                'Accept': 'application/json',
-                'x-access-token': api.apiKey + '.' + api.apiToken
-            }
+            headers: api.headers
         });
         let responseJson = await response.json();
         return responseJson;
@@ -200,14 +189,10 @@ export const delte = async (action) => {
 export const postFile = async (action, data = {}, empty = false) => {
     let url = ((empty === false) ? api.apiURL + action : action);
     try {
-        // data['x-access-token'] = api.apiKey + '.' + api.apiToken;
+        // data['buv-access-token'] = api.apiKey + '.' + api.apiToken;
         let response = await fetch(url, {
             method: 'POST',
-            headers: {
-                'Platform': `${api.apiPlatform}/${app.version}`,
-                'Accept': 'application/json',
-                'x-access-token': api.apiKey + '.' + api.apiToken
-            },
+            headers: api.headers,
             body: apnData(data)
         });
         let responseJson = await response.json();

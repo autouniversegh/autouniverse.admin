@@ -15,7 +15,7 @@ const GalleryContent = (props) => {
         action: `${func.api.apiURL}upload`,
         data: { folder, ...uploadData },
         headers: {
-            'x-access-token': func.api.apiKey + '.' + func.api.apiToken
+            'buv-access-token': func.api.apiKey + '.' + func.api.apiToken
         },
         onChange(e) {
             if (e.file.status === 'uploading') {
