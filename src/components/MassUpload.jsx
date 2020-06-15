@@ -60,7 +60,7 @@ const DealersUploadScreen = props => {
         ],
         mechanics: [
             '<b>CONTACT-NUMBERS</b>: Comma separated values', '<b>INSURED</b>: Yes/No', '<b>CERTIFICATIONS</b>: Comma separated values', '<b>TYPES</b>: Comma separated values',
-            '<b>MAKES</b>: Comma separated values', '<b>PARTS</b>: Comma separated values', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
+            '<b>MAKES</b>: Comma separated values', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
         ],
         emergencies: [
             '<b>CATEGORY</b>: Must be the ID of the categories extracted',
