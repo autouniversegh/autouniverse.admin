@@ -1,18 +1,18 @@
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
+import faker from 'faker/locale/en';
 import { Modal, Form, Button, Input, Select, notification } from 'antd';
+import { GalleryContent, GalleryImageCard } from '../../../components';
+import * as func from '../../../providers/functions';
 
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 
-import * as func from '../../../providers/functions';
-
 const EmergenciesFormScreen = props => {
-    const defaultImage = '/assets/noimage.jpg';
-    const { row, form: { getFieldDecorator, validateFields, resetFields }, visible, categories } = props;
+    const { form: { getFieldValue, getFieldDecorator, validateFields, setFieldsValue, resetFields }, visible, categories } = props;
 
-    const [file, setFile] = useState(null);
-    const [image, setImage] = useState('');
+    const [row, setRow] = useState({});
+    const [images, setImages] = useState({ names: [], links: [] });
     const [method, setMethod] = useState('');
     const [content, setContent] = useState('');
     const [errMessage, setErrMessage] = useState('');
@@ -20,37 +20,36 @@ const EmergenciesFormScreen = props => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        let row = props.row;
+        setRow(row);
         if (row.id) {
             setModalTitle('Edit advice');
             setMethod('put');
-            setImage(row.image ? row.image_link : defaultImage);
+            setImages({
+                names: [row.image],
+                links: row.image ? [row.image_link] : ''
+            });
         } else {
             setModalTitle('Add advice');
             setMethod('post');
-            setImage(defaultImage);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const addImage = (e) => {
-        var target = e.target.files[0];
-        var imageInput = document.getElementById('image');
-        var image = imageInput.files[0];
-        var reader = new FileReader();
-        reader.onload = function (r) {
-            setFile(target);
-            setImage(reader.result);
-        }
-        reader.readAsDataURL(image);
+    const uploadSuccess = (data) => {
+        images.names.push(data.name);
+        images.links.push(data.link);
+
+        setImages(images);
+        setFieldsValue({ name: getFieldValue('title') });
     }
-    const removeImage = () => {
-        if (method === 'post') {
-            setFile(null);
-            setImage(defaultImage);
-        } else {
-            setFile(null);
-            setImage(row.image_link);
-        }
+    const removeImage = (image) => {
+        let i = images.names.indexOf(image);
+        images.names.splice(i, 1);
+        images.links.splice(i, 1);
+
+        setImages(images);
+        setFieldsValue({ title: getFieldValue('title') });
     }
 
     const submit = e => {
@@ -59,45 +58,30 @@ const EmergenciesFormScreen = props => {
             if (!err) {
                 setErrMessage('');
                 setSubmitting(true);
-                var imoge = row.image || '';
-                if (file) {
-                    func.postFile('upload', { folder: 'expertadvices', 'file': file, name: v.title, resize: '437,292' }).then(res => {
-                        if (res.status === 200) {
-                            imoge = res.data[0];
-                            submitGo(v, imoge);
+                v['image'] = images.names[0];
+                v['content'] = content;
+                func[method](`expertadvices${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
+                    setSubmitting(false);
+                    if (res.status === 200) {
+                        props.onOK(method, res.data);
+                        props.onCancel();
+                        resetFields();
+                        notification.success({ message: res.message });
+                    } else {
+                        if (res.status === 412) {
+                            setErrMessage(res.data.join('<br />'));
                         } else {
-                            setSubmitting(false);
-                            if (res.status === 412) {
-                                setErrMessage(res.data.join('<br />'));
-                            } else {
-                                setErrMessage(res.message);
-                            }
+                            setErrMessage(res.message);
                         }
-                    });
-                } else {
-                    submitGo(v, imoge);
-                }
+                    }
+                });
             }
         });
     }
 
-    const submitGo = (v, imoge) => {
-        v['image'] = imoge;
-        v['content'] = content;
-        func[method](`expertadvices${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
-            setSubmitting(false);
-            if (res.status === 200) {
-                props.onOK(method, res.data);
-                props.onCancel();
-                resetFields();
-                notification.success({ message: res.message });
-            } else {
-                if (res.status === 412) {
-                    setErrMessage(res.data.join('<br />'));
-                } else {
-                    setErrMessage(res.message);
-                }
-            }
+    const setFaker = () => {
+        setRow({
+            title: faker.lorem.words(), content: faker.lorem.paragraphs()
         });
     }
 
@@ -116,19 +100,7 @@ const EmergenciesFormScreen = props => {
             <Form hideRequiredMark={false}>
                 {errMessage && (<div className="alert alert-danger" dangerouslySetInnerHTML={{ __html: errMessage }} />)}
                 <div className="row">
-                    <div className="col-12 col-lg-3">
-                        <img className="img-thumbnail" src={image} alt={row.name} width="100%" />
-                        <input type="file" name="image" id="image" accept="image/*" onChange={addImage} className="hide" />
-                        <div className="row row-xs">
-                            <div className="col-12">
-                                <Button type="dark" size="small" block className="mg-b-5" onClick={() => window.$('#image').click()}>Choose image</Button>
-                            </div>
-                            <div className="col-12">
-                                {file && (<Button type="danger" size="small" block onClick={removeImage}>Remove image</Button>)}
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-12 col-lg-9">
+                    <div className="col-12 col-lg-8">
                         <div className="row row-xs">
                             <div className="col-12 col-lg-12">
                                 <Form.Item label="Title">
@@ -176,6 +148,26 @@ const EmergenciesFormScreen = props => {
                                 />
                             </div>
                         </div>
+                    </div>
+                    <div className="col-12 col-lg-4">
+                        {func.api.space !== 'on' && method === 'post' && (
+                            <Button key="submit" type="dark" size="small" block className="mg-b-15" onClick={setFaker}>
+                                Use faker
+                            </Button>
+                        )}
+                        {!getFieldValue('title') && (
+                            <div className="alert alert-primary"><i className="fa fa-exclamation-circle"></i> Enter <b>title</b> to activate image/s upload</div>
+                        )}
+                        {getFieldValue('title') && (
+                            <GalleryContent
+                                folder="expertadvices" listType="picture" multiple={false} showUploadList={false} uploadSuccess={uploadSuccess}
+                                uploadData={{ name: getFieldValue('title') }}
+                            />
+                        )}
+                        <div className="clearfix" />
+                        {images.links.map((link, i) => (
+                            <GalleryImageCard imgLink={link} img={images.names[i]} onRemove={e => removeImage(e)} folder="expertadvices" />
+                        ))}
                     </div>
                 </div>
             </Form>

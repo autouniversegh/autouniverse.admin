@@ -62,6 +62,7 @@ const OtherServicesScreen = props => {
                 setSubmitting(true);
                 v['images'] = images.names;
                 v['location'] = location;
+                v['makes'] = v.makes.join(',');
                 v['certifications'] = v.certifications && v.certifications.join(',');
                 v['contact_phones'] = v.contact_phones.join(',');
                 func[method](`otherservices${method === 'put' ? `/${row.uuid}` : ''}`, v).then((res) => {
@@ -139,6 +140,16 @@ const OtherServicesScreen = props => {
                                     {getFieldDecorator('contact_phones', {
                                         rules: [{ required: true, message: <span /> }],
                                         initialValue: row.id && row.contact_phones.toString().split(',')
+                                    })(
+                                        <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
+                                    )}
+                                </Form.Item>
+                            </div>
+                            <div className="col-12 col-lg-12">
+                                <Form.Item label="Car makes" help="Separate each value with a comma (,)">
+                                    {getFieldDecorator('makes', {
+                                        rules: [{ required: true, message: <span /> }],
+                                        initialValue: row.id && row.makes && row.makes.split(',')
                                     })(
                                         <Select mode="tags" tokenSeparators={[',']} dropdownMenuStyle={{ display: 'none' }} autoComplete="off" size="large" disabled={submitting} />
                                     )}

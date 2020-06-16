@@ -3,8 +3,8 @@ import { Button, Form, Input, Select, Pagination, Popconfirm, notification } fro
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
-import AutopartForm from './components/autoparts.form';
 import { MassUpload } from '../../components';
+import AutopartForm from './components/autoparts.form';
 
 const limit = 12;
 const defaultImage = '/assets/noimage.jpg';

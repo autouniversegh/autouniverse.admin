@@ -156,7 +156,8 @@ class Emergencies extends Component {
                                                 <td>
                                                     Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
                                                     Premises Insured: {row.insurance ? 'YES' : 'NO'} <br />
-                                                    Certifications: {row.certifications}
+                                                    Certifications: {row.certifications} <br />
+                                                    Makes: {row.makes}
                                                 </td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>

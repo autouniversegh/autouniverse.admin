@@ -5,6 +5,7 @@ import axios from 'axios';
 export const api = {
     space: 'qa',
     headers: {},
+    headersFile: {},
 
     key_of: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt1TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu1',
     key_qa: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt4TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu4',
@@ -36,6 +37,11 @@ export const initialize = () => {
         'Platform': `${api.apiPlatform}/${app.version}`,
         'Accept': 'application/json',
         'Content-Type': 'application/json',
+        'buv-access-token': api.apiKey + '.' + api.apiToken
+    };
+    api.headersFile = {
+        'Platform': `${api.apiPlatform}/${app.version}`,
+        'Accept': 'application/json',
         'buv-access-token': api.apiKey + '.' + api.apiToken
     };
 }
@@ -121,12 +127,10 @@ export const serData = (obj) => {
     return str.join('&');
 }
 export const apnData = (obj) => {
-    const body = new FormData();
+    let body = new FormData();
     for (var p in obj) {
         if (p === 'file') {
             body.append('file[0]', obj[p]);
-        } else if (p === 'image') {
-            body.append('image[0]', obj[p]);
         } else {
             body.append(p, obj[p]);
         }
@@ -186,13 +190,11 @@ export const delte = async (action) => {
         return { status: 606, result: 'Network request failed', error: error };
     }
 }
-export const postFile = async (action, data = {}, empty = false) => {
-    let url = ((empty === false) ? api.apiURL + action : action);
+export const postFile = async (action, data = {}) => {
     try {
-        // data['buv-access-token'] = api.apiKey + '.' + api.apiToken;
-        let response = await fetch(url, {
+        let response = await fetch(api.apiURL + action, {
             method: 'POST',
-            headers: api.headers,
+            headers: api.headersFile,
             body: apnData(data)
         });
         let responseJson = await response.json();

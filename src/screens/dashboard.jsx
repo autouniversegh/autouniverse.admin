@@ -36,7 +36,7 @@ class Dashboard extends Component {
                             ]}
                         />
                     </div>
-                    <div className="col-6 col-sm-6 col-lg-4">
+                    <div className="col-6 col-sm-6 col-lg-6">
                         <BrandCard
                             endpoint="providers"
                             style={{ icon: 'icon-wrench', bg: 'bg-primary' }}

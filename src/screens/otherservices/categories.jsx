@@ -21,7 +21,7 @@ class Categories extends Component {
     componentDidMount() {
         this.setPage();
 
-        func.get('emergencies-categories', { orderby: 'name_asc', status: 1 }).then(res => {
+        func.get('otherservices-categories', { orderby: 'name_asc', status: 1 }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({

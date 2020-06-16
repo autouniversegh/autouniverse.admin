@@ -3,6 +3,7 @@ import { Button, Form, Input, Select, Pagination, Popconfirm, notification } fro
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
+import { MassUpload } from '../../components';
 import OtherServicesForm from './components/otherservices.form';
 
 const limit = 12;
@@ -12,7 +13,7 @@ const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 
 class OtherServices extends Component {
 
     state = {
-        loading: false, formModal: false,
+        loading: false, formModal: false, uploadModal: false,
         data: [], categories: [], row: {}, pathname: '', edited: 0, manipulate: 0,
         istatus: '%', iname: '', icategory: '%',
         step: 0, currentStep: 1, total: 0
@@ -94,7 +95,7 @@ class OtherServices extends Component {
                                             <Select.Option value={0}>Inactive</Select.Option>
                                         </Select>
                                     </div>
-                                    <div className="col-3">
+                                    <div className="col-2">
                                         <Input placeholder="Search by name" disabled={loading} onPressEnter={this.filter} onChange={e => this.formChange(e, 'iname')} />
                                     </div>
                                     <div className="col-2">
@@ -108,9 +109,14 @@ class OtherServices extends Component {
                                     <div className="col-2">
                                         <Button type="primary" size="small" loading={loading} onClick={this.filter}>Search</Button>
                                     </div>
-                                    <div className="col-3 text-right">
-                                        {func.hasR('aut_add') && (
-                                            <Button type="dark" size="small" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                    <div className="col-4 text-right">
+                                        {func.hasR('oth_add') && (
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, formModal: true })}><i className="icon-plus"></i> &nbsp; Add new</Button>
+                                        )}
+                                        {func.hasR('oth_up') && (
+                                            <Button type="dark" size="small" className="mg-r-5" onClick={() => this.setState({ row: {}, uploadModal: true })}>
+                                                <i className="icon-cloud-upload"></i> &nbsp; Mass upload
+                                            </Button>
                                         )}
                                     </div>
                                 </div>
@@ -148,16 +154,17 @@ class OtherServices extends Component {
                                                 <td>
                                                     Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
                                                     Premises Insured: {row.insurance ? 'YES' : 'NO'} <br />
-                                                    Certifications: {row.certifications}
+                                                    Certifications: {row.certifications} <br />
+                                                    Makes: {row.makes}
                                                 </td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    {row.status !== 2 && func.hasR('aut_upd') && (
+                                                    {row.status !== 2 && func.hasR('oth_upd') && (
                                                         <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true })}>Edit</Button>
                                                     )}
                                                     {' '}
-                                                    {func.hasR('aut_del') && (
+                                                    {func.hasR('oth_del') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Delete" okButtonProps={{ type: 'danger', size: 'small' }} onConfirm={() => this.delete(row)}>
                                                             <Button type="danger" size="small" loading={submitting}>Delete</Button>
                                                         </Popconfirm>
@@ -197,6 +204,18 @@ class OtherServices extends Component {
                     />
                 )}
 
+                {this.state.uploadModal === true && (
+                    <MassUpload
+                        {...this.props}
+                        module="otherservices"
+                        row={this.state.row}
+                        visible={this.state.uploadModal}
+                        onCancel={() => this.setState({ row: {}, uploadModal: false })}
+                        onOK={(a, e) => {
+                            this.getData();
+                        }}
+                    />
+                )}
 
             </React.Fragment>
         );

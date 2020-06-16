@@ -127,7 +127,7 @@ const AutopartFormScreen = props => {
                                         initialValue: row.car
                                     })(
                                         <Select showSearch optionFilterProp="children" size="large" placeholder="Choose a car make" disabled={submitting}>
-                                            {Object.keys(cars).map(car => (
+                                            {(Object.keys(cars) || []).map(car => (
                                                 <Select.Option value={car}>{car}</Select.Option>
                                             ))}
                                         </Select>
@@ -141,7 +141,7 @@ const AutopartFormScreen = props => {
                                         initialValue: row.car_model
                                     })(
                                         <Select showSearch optionFilterProp="children" size="large" placeholder="Choose a car model" disabled={!getFieldValue('car') || submitting}>
-                                            {getFieldValue('car') && cars[getFieldValue('car')].map(car => (
+                                            {getFieldValue('car') && (cars[getFieldValue('car')] || []).map(car => (
                                                 <Select.Option value={car}>{car}</Select.Option>
                                             ))}
                                         </Select>

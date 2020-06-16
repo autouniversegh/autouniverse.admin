@@ -63,14 +63,19 @@ const DealersUploadScreen = props => {
             '<b>MAKES</b>: Comma separated values', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
         ],
         emergencies: [
-            '<b>CATEGORY</b>: Must be the ID of the categories extracted',
+            '<b>CATEGORY</b>: Must be the ID of the categories extracted', '<b>MAKES</b>: Comma separated values',
             '<b>CONTACT-NUMBERS</b>: Comma separated values', '<b>INSURED</b>: Yes/No', '<b>CERTIFICATIONS</b>: Comma separated values',
             '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
         ],
         autoparts: [
             '<b>DEALER</b>: Must be the ID of the dealers extracted',
             '<b>MAKE</b>: Must be the same from the original excel', '<b>MODEL</b>: Must be the model attached to the make', '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
-        ]
+        ],
+        otherservices: [
+            '<b>CATEGORY</b>: Must be the ID of the categories extracted', '<b>MAKES</b>: Comma separated values',
+            '<b>CONTACT-NUMBERS</b>: Comma separated values', '<b>INSURED</b>: Yes/No', '<b>CERTIFICATIONS</b>: Comma separated values',
+            '<b>IMAGES</b>: Comma separated values and must be available in the Gallery'
+        ],
     };
 
     return (
