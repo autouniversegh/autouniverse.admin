@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Select, Pagination, notification } from 'antd';
+import { Button, Form, Input, Select, Pagination, notification, Popconfirm } from 'antd';
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
@@ -84,6 +84,23 @@ class UsersList extends Component {
         });
     }
 
+    clearDevice = (row) => {
+        const { data } = this.state;
+        this.setState({ submitting: true, edited: 0 });
+        func.put(`users/${row.uuid}`, { ...row, avatar_link: undefined, device: {}, devices: row.devices || [] }).then((res) => {
+            this.setState({ submitting: false });
+            if (res.status === 200) {
+                let e = res.data;
+                let i = data.indexOf(data.filter(row => row.uuid === e.uuid)[0]);
+                data[i] = e;
+                this.setState({ data, edited: e.uuid });
+                notification.success({ message: 'User\'s device cleared' });
+            } else {
+                notification.error({ message: res.message });
+            }
+        });
+    }
+
     render() {
         let i = this.state.step + 1;
         const { loading, data, submitting, total, currentStep, edited, istatus, access } = this.state;
@@ -162,17 +179,25 @@ class UsersList extends Component {
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
                                                     {row.status !== 2 && func.hasR('usr_upd') && (
-                                                        <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: '' })}>Edit</Button>
+                                                        <Button type="dark" size="small" className="mg-r-5" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: '' })}>Edit</Button>
                                                     )}
-                                                    {' '}
                                                     {/* {func.hasR('usr_sus') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Suspend" okButtonProps={{ type: 'warning', size: 'small' }} onConfirm={() => this.delete(row)}>
-                                                            <Button type="warning" size="small" loading={submitting}>Suspend</Button>
+                                                            <Button type="warning" size="small" className="mg-r-5" loading={submitting}>Suspend</Button>
                                                         </Popconfirm>
                                                     )} */}
-                                                    {' '}
                                                     {func.hasR('usr_res') && (
-                                                        <Button type="dark" size="small" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: 'reset' })}>Reset</Button>
+                                                        <Button type="dark" size="small" className="mg-r-5" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: 'reset' })}>
+                                                            <i className="fa fa-unlock fa-2xs"></i>
+                                                        </Button>
+                                                    )}
+
+                                                    {func.hasR('usr_dev') && (
+                                                        <Popconfirm title="Are you sure you want to clear the device for this user?" okText="Yes, Clear Device" okButtonProps={{ type: 'dark', size: 'small' }} onConfirm={() => this.clearDevice(row)}>
+                                                            <Button type="dark" size="small" className="mg-r-5" loading={submitting}>
+                                                                <i className="fa fa-mobile"></i>
+                                                            </Button>
+                                                        </Popconfirm>
                                                     )}
                                                 </td>
                                             </tr>
