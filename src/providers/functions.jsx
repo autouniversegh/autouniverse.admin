@@ -11,9 +11,9 @@ export const api = {
     key_qa: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt4TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu4',
     key_on: 'S89Fx2bxGxCgb3BleMqpq49MF8ZgkGQt6TxmxTx5scZk8tm8kqH1UwSJQvRqkNekUwhretxHu6',
 
-    server_of: 'http://localhost/autouniverse/api/v1/api/',
-    server_qa: 'http://qa-api.autouniversegh.com/v1/api/',
-    server_on: 'http://api.autouniversegh.com/v1/api/',
+    server_of: 'http://localhost/autouniverse/api/v1/',
+    server_qa: 'http://qa-api.autouniversegh.com/v1/',
+    server_on: 'http://api.autouniversegh.com/v1/',
 
     platform_of: 'localhost',
     platform_qa: 'qa-admin.autouniversegh.com',

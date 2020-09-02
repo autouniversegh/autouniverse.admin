@@ -27,7 +27,7 @@ const EmergenciesFormScreen = props => {
             setMethod('put');
             setImages({
                 names: [row.image],
-                links: row.image ? [row.image_link] : ''
+                links: row.image ? [row.image_link] : []
             });
         } else {
             setModalTitle('Add advice');
