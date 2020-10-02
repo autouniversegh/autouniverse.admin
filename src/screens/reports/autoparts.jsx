@@ -5,19 +5,20 @@ import { CSVLink } from 'react-csv';
 import * as func from '../../providers/functions';
 
 const limit = 25;
-class ReportsDealers extends Component {
+
+class ReportsAutoparts extends Component {
 
     state = {
         loading: false, formModal: false,
         data: [], csvData: [], row: {},
-        pathname: '', itype: 'dealers',
+        pathname: '', itype: 'autoparts',
         step: 0, currentStep: 1, total: 0
     }
 
     componentDidMount() {
         this.setPage();
 
-        func.get('dealers', { orderby: 'crdate_desc', status: 1 }).then(res => {
+        func.get('autoparts', { orderby: 'crdate_desc', status: 1 }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({
@@ -25,12 +26,14 @@ class ReportsDealers extends Component {
                         return {
                             'ID': row.uuid,
                             'Name': row.name,
-                            'Contact Person': row.contact_name,
-                            'Contact Number': row.contact_phones,
-                            'Location': row.location.region + ' / ' + row.location.city + ' / ' + row.location.area,
-                            'Does delivery': row.delivery ? 'Yes' : 'No',
+                            'Dealer': row.dealer.name,
+                            'Price': row.price,
+                            'Car': row.car + ' / ' + row.car_model + ' / ' + row.car_year,
+                            'Source': row.source,
                             'Creation Date': moment(row.crdate).format('LLL')
                         }
+                    }, () => {
+                        console.log(this.state.csvData)
                     })
                 });
             }
@@ -38,7 +41,7 @@ class ReportsDealers extends Component {
     }
 
     setPage() {
-        this.props.setPageTitle('Reports: Auto part dealers');
+        this.props.setPageTitle('Reports: Auto parts');
         this.getData();
     }
 
@@ -50,7 +53,7 @@ class ReportsDealers extends Component {
     getData = () => {
         this.setState({ loading: true, total: 0 });
         const { step } = this.state;
-        func.get('dealers', { orderby: 'crdate_desc', limit: `${step},${limit}` }).then(res => {
+        func.get('autoparts', { orderby: 'crdate_desc', limit: `${step},${limit}` }).then(res => {
             this.setState({ loading: false });
             if (res.status === 200) {
                 this.setState({ data: res.data, total: res.count });
@@ -108,11 +111,11 @@ class ReportsDealers extends Component {
                                     <tr>
                                         <th>#</th>
                                         <th>Name</th>
-                                        <th>Contact person</th>
-                                        <th>Contact number/s</th>
-                                        <th>Location</th>
-                                        <th>Does delivery</th>
-                                        <th>Creation date</th>
+                                        <th>Dealer</th>
+                                        <th>Price</th>
+                                        <th>Car</th>
+                                        <th>Part Source</th>
+                                        <th>Created</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -124,10 +127,14 @@ class ReportsDealers extends Component {
                                             <tr key={row.uuid}>
                                                 <td>{i++}</td>
                                                 <td>{row.name}</td>
-                                                <td>{row.contact_name}</td>
-                                                <td>{row.contact_phones}</td>
-                                                <td>{row.location.region} / {row.location.city} / {row.location.area}</td>
-                                                <td>{row.delivery ? 'Yes' : 'No'}</td>
+                                                <td>{row.dealer.name}</td>
+                                                <td>GHS{row.price}</td>
+                                                <td>
+                                                    Make: {row.car} <br />
+                                                    Model: {row.car_model} <br />
+                                                    Year: {row.car_year} <br />
+                                                </td>
+                                                <td>{row.source}</td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                             </tr>
                                         ))
@@ -145,4 +152,4 @@ class ReportsDealers extends Component {
     }
 }
 
-export default ReportsDealers;
+export default ReportsAutoparts;

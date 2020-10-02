@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { AppNavbarBrand, AppSidebarToggler } from '@coreui/react';
 import Logo from '../assets/img/logo.svg';
+import { Modal } from 'antd';
 // import sygnet from '../../assets/img/brand/sygnet.svg';
 
 const propTypes = {
@@ -19,6 +20,16 @@ class DefaultHeader extends Component {
     const { children, ...attributes } = this.props;
     const { _auth: { logg } } = this.props;
 
+    const logout = () => {
+      Modal.confirm({
+        title: 'Logout',
+        content: 'Confirm logout',
+        onOk: () => {
+          this.props.signOutSuccess();
+        }
+      });
+    }
+
     return (
       <React.Fragment>
         <AppSidebarToggler className="d-lg-none" display="md" mobile />
@@ -29,7 +40,7 @@ class DefaultHeader extends Component {
         <AppSidebarToggler className="d-md-down-none" display="lg" />
         <Nav className="ml-auto" navbar>
           <UncontrolledDropdown nav direction="down">
-            <DropdownToggle nav style={{ marginRight: 20 }}>
+            <DropdownToggle nav style={{ marginRight: 20 }} onClick={() => logout()}>
               <img src={logg.avatar_link} className="img-avatar" alt={logg.name} />
               {logg.name}
             </DropdownToggle>

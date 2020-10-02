@@ -41,7 +41,7 @@ const EmergenciesFormScreen = props => {
         images.links.push(data.link);
 
         setImages(images);
-        setFieldsValue({ name: getFieldValue('title') });
+        setFieldsValue({ title: getFieldValue('title') });
     }
     const removeImage = (image) => {
         let i = images.names.indexOf(image);

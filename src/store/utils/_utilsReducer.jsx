@@ -66,16 +66,20 @@ const initialState = {
                     { name: 'Subscriptions', url: '/reports/subscriptions', code: 'rep_subs' },
                     { name: 'Reviews', url: '/reports/reviews', code: 'rep_rev' },
                     { name: 'Auto parts dealers', url: '/reports/dealers', code: 'rep_del' },
+                    { name: 'Auto parts', url: '/reports/autoparts', code: 'rep_aut' },
+                    { name: 'Mechanics', url: '/reports/mechanics', code: 'rep_mec' },
+                    { name: 'Emergency services', url: '/reports/emergencies', code: 'rep_emr' },
                     { name: 'Join date', url: '/reports/joindate', code: 'rep_join' },
                     { name: 'Views', url: '/reports/views', code: 'rep_views' },
-                    { name: 'Orders', url: '/reports/orders', code: 'rep_orders' }
+                    { name: 'Orders', url: '/reports/orders', code: 'rep_orders' },
                 ]
             },
             {
                 name: 'Setup', url: '/setup', icon: 'icon-settings', code: 'set',
                 children: [
                     { name: 'Subscriptions', url: '/setup/subscriptions', code: 'set_sub', },
-                    { name: 'Services Description', url: '/setup/descriptions', code: 'set_desc', }
+                    { name: 'Services Description', url: '/setup/descriptions', code: 'set_desc', },
+                    { name: 'Data counts', url: '/setup/counts', code: 'set_cnt', },
                 ]
             },
             {
