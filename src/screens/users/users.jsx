@@ -1,19 +1,19 @@
 import React, { Component } from 'react';
-import { Button, Form, Input, Select, Pagination, notification, Popconfirm } from 'antd';
+import { Button, Form, Input, Select, Pagination, notification, Popconfirm, Menu, Dropdown } from 'antd';
 import * as func from '../../providers/functions';
 import moment from 'moment';
 
 import UsersForm from './components/users.form';
 
 const limit = 12;
-const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Deleted']];
+const rowStatus = [['warning', 'Not active'], ['success', 'Active'], ['danger', 'Suspended']];
 
 class UsersList extends Component {
 
     state = {
         loading: false, formModal: false, formType: '',
         data: [], access: [], row: {}, pathname: 'XXL', edited: 0, manipulate: 0,
-        istatus: '%', iname: '', iaccess: '%',
+        istatus: 1, iname: '', iaccess: '%',
         step: 0, currentStep: 1, total: 0
     }
 
@@ -101,6 +101,40 @@ class UsersList extends Component {
         });
     }
 
+    suspend = (row) => {
+        const { data } = this.state;
+        this.setState({ submitting: true, edited: 0 });
+        func.put(`users/${row.uuid}`, { status: 2 }).then((res) => {
+            this.setState({ submitting: false });
+            if (res.status === 200) {
+                let e = res.data;
+                let i = data.indexOf(data.filter(row => row.uuid === e.uuid)[0]);
+                data[i] = e;
+                this.setState({ data, edited: e.uuid });
+                notification.success({ message: 'User has been suspended' });
+            } else {
+                notification.error({ message: res.message });
+            }
+        });
+    }
+
+    unsuspend = (row) => {
+        const { data } = this.state;
+        this.setState({ submitting: true, edited: 0 });
+        func.put(`users/${row.uuid}`, { status: 1 }).then((res) => {
+            this.setState({ submitting: false });
+            if (res.status === 200) {
+                let e = res.data;
+                let i = data.indexOf(data.filter(row => row.uuid === e.uuid)[0]);
+                data[i] = e;
+                this.setState({ data, edited: e.uuid });
+                notification.success({ message: 'User has been unsuspended' });
+            } else {
+                notification.error({ message: res.message });
+            }
+        });
+    }
+
     render() {
         let i = this.state.step + 1;
         const { loading, data, submitting, total, currentStep, edited, istatus, access } = this.state;
@@ -117,6 +151,7 @@ class UsersList extends Component {
                                             <Select.Option value={'%'}>All status</Select.Option>
                                             <Select.Option value={1}>Active</Select.Option>
                                             <Select.Option value={0}>Inactive</Select.Option>
+                                            <Select.Option value={2}>Suspended</Select.Option>
                                         </Select>
                                     </div>
                                     <div className="col-3">
@@ -178,15 +213,15 @@ class UsersList extends Component {
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
                                                 <td align="right">
-                                                    {row.status !== 2 && func.hasR('usr_upd') && (
+                                                    {/* {row.status !== 2 && func.hasR('usr_upd') && (
                                                         <Button type="dark" size="small" className="mg-r-5" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: '' })}>Edit</Button>
-                                                    )}
+                                                    )} */}
                                                     {/* {func.hasR('usr_sus') && (
                                                         <Popconfirm title="Are you sure?" okText="Yes, Suspend" okButtonProps={{ type: 'warning', size: 'small' }} onConfirm={() => this.delete(row)}>
                                                             <Button type="warning" size="small" className="mg-r-5" loading={submitting}>Suspend</Button>
                                                         </Popconfirm>
                                                     )} */}
-                                                    {func.hasR('usr_res') && (
+                                                    {/* {func.hasR('usr_res') && (
                                                         <Button type="dark" size="small" className="mg-r-5" loading={submitting} onClick={() => this.setState({ row, formModal: true, formType: 'reset' })}>
                                                             <i className="fa fa-unlock fa-2xs"></i>
                                                         </Button>
@@ -198,7 +233,46 @@ class UsersList extends Component {
                                                                 <i className="fa fa-mobile"></i>
                                                             </Button>
                                                         </Popconfirm>
-                                                    )}
+                                                    )} */}
+                                                    <Dropdown overlay={
+                                                        <Menu>
+                                                            {func.hasR('usr_res') && (
+                                                                <Menu.Item onClick={() => this.setState({ row, formModal: true, formType: '' })}>
+                                                                    <i className="fa fa-edit fa-2xs"></i> &nbsp; Edit
+                                                                </Menu.Item>
+                                                            )}
+                                                            {func.hasR('usr_res') && (
+                                                                <Menu.Item onClick={() => this.setState({ row, formModal: true, formType: 'reset' })}>
+                                                                    <i className="fa fa-unlock fa-2xs"></i> &nbsp; Reset
+                                                                </Menu.Item>
+                                                            )}
+                                                            {func.hasR('usr_dev') && (
+                                                                <Menu.Item>
+                                                                    <Popconfirm title="Are you sure you want to clear the device for this user?" okText="Yes, Clear Device" okButtonProps={{ type: 'dark', size: 'small' }} onConfirm={() => this.clearDevice(row)}>
+                                                                        <i className="fa fa-mobile fa-2xs"></i> &nbsp; Unlock
+                                                                    </Popconfirm>
+                                                                </Menu.Item>
+                                                            )}
+                                                            {func.hasR('usr_sus') && row.status !== 2 && (
+                                                                <Menu.Item>
+                                                                    <Popconfirm title="Are you sure you want to suspend this user?" okText="Yes, Suspend" okButtonProps={{ type: 'dark', size: 'small' }} onConfirm={() => this.suspend(row)}>
+                                                                        <i className="fa fa-times fa-2xs"></i> &nbsp; Suspend
+                                                                    </Popconfirm>
+                                                                </Menu.Item>
+                                                            )}
+                                                            {func.hasR('usr_sus') && row.status === 2 && (
+                                                                <Menu.Item>
+                                                                    <Popconfirm title="Are you sure you want to unsuspend this user?" okText="Yes, Unsuspend" okButtonProps={{ type: 'dark', size: 'small' }} onConfirm={() => this.unsuspend(row)}>
+                                                                        <i className="fa fa-check fa-2xs"></i> &nbsp; Unsuspend
+                                                                    </Popconfirm>
+                                                                </Menu.Item>
+                                                            )}
+                                                        </Menu>
+                                                    } trigger={['click']} placement="bottomLeft">
+                                                        <Button types="dark" size="small" className="mg-r-40" loading={submitting}>
+                                                            Actions &nbsp; <i className="fa fa-caret-down"></i>
+                                                        </Button>
+                                                    </Dropdown>
                                                 </td>
                                             </tr>
                                         ))

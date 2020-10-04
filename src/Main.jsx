@@ -90,7 +90,7 @@ class Main extends Component {
                 }
                 row['children'] = childs.length && childs;
                 rows = row;
-                items.push(rows)
+                items.push(rows);
             }
         });
         novigation['items'] = items;

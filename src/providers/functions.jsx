@@ -16,13 +16,13 @@ export const api = {
     server_on: 'http://api.autouniversegh.com/v1/',
 
     platform_of: 'localhost',
-    platform_qa: 'qa-admin.autouniversegh.com',
-    platform_on: 'admin.autouniversegh.com',
+    platform_qa: 'qa-admin',
+    platform_on: 'admin',
 }
 
 export const initialize = () => {
     if (window.location.host.match(/localhost/i)) {
-        api.space = 'of';
+        api.space = 'qa';
     } else if (window.location.host.match(/qa-/i)) {
         api.space = 'qa';
     } else {
