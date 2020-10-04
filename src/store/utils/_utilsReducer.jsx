@@ -79,6 +79,7 @@ const initialState = {
                 children: [
                     { name: 'Subscriptions', url: '/setup/subscriptions', code: 'set_sub', },
                     { name: 'Services Description', url: '/setup/descriptions', code: 'set_desc', },
+                    { name: 'Company details', url: '/setup/company', code: 'set_cmp', },
                     { name: 'Data counts', url: '/setup/counts', code: 'set_cnt', },
                 ]
             },

@@ -6,7 +6,7 @@ import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css';
 
 
-class SetupDescriptions extends Component {
+class SetupCompany extends Component {
 
     state = {
         loading: false, submitting: false,
@@ -14,7 +14,7 @@ class SetupDescriptions extends Component {
     }
 
     componentDidMount() {
-        this.props.setPageTitle('Setup: Descriptions');
+        this.props.setPageTitle('Setup: Company details');
     }
 
     setContent(e, name) {
@@ -41,12 +41,8 @@ class SetupDescriptions extends Component {
     render() {
         const { _utils: { settings } } = this.props;
         const setForms = [
-            { label: 'Auto parts', name: 'description_autoparts' },
-            { label: 'Mechanics', name: 'description_mechanics' },
-            { label: 'Emergencies', name: 'description_emergencies' },
-            { label: 'Expert Advice', name: 'description_expertadvices' },
-            { label: 'Other Services', name: 'description_otherservices' },
-            { label: 'Maintainance Tracker', name: 'description_maintenance' }
+            { label: 'About', name: 'description_about' },
+            { label: 'Contact', name: 'description_contact' },
         ];
 
         return (
@@ -80,4 +76,4 @@ class SetupDescriptions extends Component {
     }
 }
 
-export default Form.create()(SetupDescriptions);
+export default Form.create()(SetupCompany);
