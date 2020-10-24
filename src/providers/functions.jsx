@@ -13,7 +13,7 @@ export const api = {
 
     server_of: 'http://localhost/autouniverse/api/v1/',
     server_qa: 'http://qa-api.autouniversegh.com/v1/',
-    server_on: 'http://api.autouniversegh.com/v1/',
+    server_on: 'https://api.autouniversegh.com/v1/',
 
     platform_of: 'localhost',
     platform_qa: 'qa-admin',

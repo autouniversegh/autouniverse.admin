@@ -46,7 +46,7 @@ class SetupDescriptions extends Component {
             { label: 'Emergencies', name: 'description_emergencies' },
             { label: 'Expert Advice', name: 'description_expertadvices' },
             { label: 'Other Services', name: 'description_otherservices' },
-            { label: 'Maintainance Tracker', name: 'description_maintenance' }
+            { label: 'Maintainance Tracker', name: 'description_maintenance' },
         ];
 
         return (
