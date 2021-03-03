@@ -15,7 +15,7 @@ const GalleryContent = (props) => {
         action: `${func.api.apiURL}upload`,
         data: { folder, ...uploadData },
         headers: {
-            'buv-access-token': func.api.apiKey + '.' + func.api.apiToken
+            'buv-access-token': func.api.apiKey + '.' + func.api.apiToken,
         },
         onChange(e) {
             if (e.file.status === 'uploading') {
@@ -25,7 +25,7 @@ const GalleryContent = (props) => {
                 if (e.file.response.status === 200) {
                     uploadSuccess && uploadSuccess({
                         name: e.file.response.data[0],
-                        link: e.file.response.links[0]
+                        link: e.file.response.links[0],
                     });
                 }
             }

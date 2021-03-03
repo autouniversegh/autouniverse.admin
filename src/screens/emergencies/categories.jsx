@@ -31,7 +31,7 @@ class Categories extends Component {
                             'Name': row.name,
                             'Description': row.description
                         }
-                    })
+                    }),
                 });
             }
         });
