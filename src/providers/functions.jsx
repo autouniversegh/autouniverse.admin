@@ -22,7 +22,7 @@ export const api = {
 
 export const initialize = () => {
     if (window.location.host.match(/localhost/i)) {
-        api.space = 'of';
+        api.space = 'qa';
     } else if (window.location.host.match(/qa-/i)) {
         api.space = 'qa';
     } else {

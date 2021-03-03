@@ -27,6 +27,7 @@ class SetupCompany extends Component {
         func.put('settings', this.state.content).then(res => {
             this.setState({ submitting: false });
             if (res.status === 200) {
+                this.props.setSetSettings('settings', res.data);
                 notification.success({ message: res.message });
             } else {
                 if (res.status === 412) {

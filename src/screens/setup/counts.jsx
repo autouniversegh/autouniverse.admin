@@ -23,6 +23,7 @@ class SetupCounts extends Component {
                     this.setState({ submitting: false });
                     if (res.status === 200) {
                         notification.success({ message: res.message });
+                        this.props.setSetSettings('settings', res.data);
                     } else {
                         if (res.status === 412) {
                             this.setState({ errMessage: res.data.join('<br />') });
