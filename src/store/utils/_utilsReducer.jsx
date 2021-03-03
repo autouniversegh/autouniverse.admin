@@ -81,6 +81,7 @@ const initialState = {
                     { name: 'Services Description', url: '/setup/descriptions', code: 'set_desc', },
                     { name: 'Company details', url: '/setup/company', code: 'set_cmp', },
                     { name: 'Data counts', url: '/setup/counts', code: 'set_cnt', },
+                    { name: 'Suspicious users', url: '/setup/suspicious', code: 'set_sus', },
                 ]
             },
             {
