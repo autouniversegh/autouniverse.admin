@@ -28,7 +28,6 @@ const EmergenciesFormScreen = props => {
             setModalTitle('Add emergency');
             setMethod('post');
         }
-
         // set location options
         setLocOptions(func.locationOptions(locations));
 
@@ -157,14 +156,17 @@ const EmergenciesFormScreen = props => {
                                 </Form.Item>
                             </div>
                             <div className="col-12 col-lg-6">
-                                <Form.Item label="Premises Insured">
-                                    {getFieldDecorator('insurance', {
+                                <Form.Item label="Rating">
+                                    {getFieldDecorator('rating', {
                                         rules: [{ required: true, message: <span /> }],
-                                        initialValue: row.id ? row.insurance : 0
+                                        initialValue: row.id ? row.rating : 'Unrated'
                                     })(
                                         <Select optionFilterProp="children" size="large" disabled={submitting}>
-                                            <Select.Option value={1}>Yes</Select.Option>
-                                            <Select.Option value={0}>No</Select.Option>
+                                            <Select.Option value="Unrated">Unrated</Select.Option>
+                                            <Select.Option value="A">A</Select.Option>
+                                            <Select.Option value="B">B</Select.Option>
+                                            <Select.Option value="C">C</Select.Option>
+                                            <Select.Option value="D">D</Select.Option>
                                         </Select>
                                     )}
                                 </Form.Item>

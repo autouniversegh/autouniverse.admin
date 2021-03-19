@@ -153,7 +153,7 @@ class OtherServices extends Component {
                                                 </td>
                                                 <td>
                                                     Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
-                                                    Premises Insured: {row.insurance ? 'YES' : 'NO'} <br />
+                                                    Rating: {row.rating} <br />
                                                     Certifications: {row.certifications} <br />
                                                     Makes: {row.makes}
                                                 </td>

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-// import HttpsRedirect from 'react-https-redirect';
+import HttpsRedirect from 'react-https-redirect';
 
 import configureStore, { history } from "./store/_store";
 
@@ -16,9 +16,9 @@ const store = configureStore();
 
 ReactDOM.render(
     <Provider store={store}>
-        {/* <HttpsRedirect> */}
+        <HttpsRedirect>
             <App history={history} />
-        {/* </HttpsRedirect> */}
+        </HttpsRedirect>
     </Provider>, document.getElementById("root"));
 
 serviceWorker.unregister();
