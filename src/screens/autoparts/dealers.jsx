@@ -16,7 +16,7 @@ class Dealers extends Component {
         loading: false, formModal: false, uploadModal: false,
         data: [], row: {}, pathname: '', edited: 0,
         istatus: '%', iname: '',
-        step: 0, currentStep: 1, total: 0
+        step: 0, currentStep: 1, total: 0,
     }
 
     componentDidMount() {
@@ -135,14 +135,14 @@ class Dealers extends Component {
                                                 <td>{row.name}</td>
                                                 <td>
                                                     Name: {row.contact_name} <br />
-                                                    Phone: {row.contact_phones}
+                                                    Phone: {row.contact_phones.split(',').join(', ')}
                                                 </td>
                                                 <td>
                                                     Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
                                                     Delivery: {row.delivery ? 'YES' : 'NO'} <br />
-                                                    Car makes: {row.makes} <br />
-                                                    Parts: {row.parts} <br />
-                                                    Parts imported from: {row.parts_source}
+                                                    Car makes: {row.makes.split(',').join(', ')} <br />
+                                                    Parts: {row.parts.split(',').join(', ')} <br />
+                                                    Parts imported from: {row.parts_source.split(',').join(', ')}
                                                 </td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>

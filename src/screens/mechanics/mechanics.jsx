@@ -135,12 +135,12 @@ class Mechanics extends Component {
                                                 <td>{row.name}</td>
                                                 <td>
                                                     Name: {row.contact_name} <br />
-                                                    Phone: {row.contact_phones}
+                                                    Phone: {row.contact_phones.split(',').join(', ')}
                                                 </td>
                                                 <td>
                                                     Location: {row.location.region} / {row.location.city} / {row.location.area} <br />
                                                     Rating: {row.rating} <br />
-                                                    Certifications: {row.certifications}
+                                                    Certifications: {row.certifications.split(',').join(', ')}
                                                 </td>
                                                 <td><label className={`badge badge-${rowStatus[row.status][0]}`}>{rowStatus[row.status][1]}</label></td>
                                                 <td>{moment(row.crdate).format('LLL')}</td>
