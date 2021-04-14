@@ -40,7 +40,8 @@ class SetupSubsScreen extends Component {
         const { _utils: { settings }, form: { getFieldDecorator } } = this.props;
         const setForms = [
             { label: 'Price', name: 'subscription_price' },
-            { label: 'Duration (month)', name: 'subscription_duration' }
+            { label: 'Duration (months)', name: 'subscription_duration' },
+            { label: 'Free Duration (months)', name: 'subscription_duration_free' }
         ];
 
         return (
